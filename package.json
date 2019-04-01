@@ -9,6 +9,13 @@
   "author": "vale",
   "license": "ISC",
   "dependencies": {
-    "googleapis": "^27.0.0"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "googleapis": "^27.0.0",
+    "https": "^1.0.0",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0"
   }
 }
