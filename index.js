@@ -1,174 +1,603 @@
-/**
- * @license
- * Copyright Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-// [START calendar_quickstart]
-const fs = require('fs');
+//01/04/2019 inizio sviluppo prototipo
+/****************************************** */
+const express = require("express");
+const bodyParser = require("body-parser");
+const session = require('express-session');
+/*********** */
+const request = require('request');
+const google = require('googleapis');
+const querystring = require('querystring');
 const readline = require('readline');
-const {google} = require('googleapis');
+//const path = require("path");
+const https = require('https');
 
-// If modifying these scopes, delete token.json. .readonly
-const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
-//https://www.googleapis.com/auth/calendar.events 'https://www.googleapis.com/auth/calendar',
 
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
+/*** DIALOGFLOW FULFILLMENT */
+const {WebhookClient} = require('dialogflow-fulfillment');
+/*** ACTIONS ON GOOGLE */
+
+/** utilità */
+const fs = require("fs");
+const utf8=require('utf8');
+//file di configurazione
+const env = require('node-env-file');
+env(__dirname + '/.env');
+
 const TOKEN_PATH = 'token.json';
+const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
+var app = express();
+/*var bot='HEAD'; // modificato in data 14/03/2019 in HEAD -->HEADdemo FarmaInfoBot
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");*/
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static(__dirname));
 
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Calendar API.
-  authorize(JSON.parse(content), listEvents,checazzo);
-});
-
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorize(credentials, callback) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getAccessToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+//inizializzo la sessione
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {secure: false, maxAge: 180000,name:'JSESSIONID'}
+  }));
+//uso le variabili di sessione
+app.use(function (req, res, next) {
+    
+    req.session.username='';
+    req.session.matId='';
+    req.session.stuId='';
+    
+  
+    next();
+  })
+  postData = querystring.stringify({
+    'searchText': 'ciao',
+    'user':'',
+    'pwd':'',
+    'ava':'FarmaInfoBot'
+    
   });
-}
+  //questo diventerà un modulo con la conessione a PLQ
+   const options = {
+     //modifica del 12/11/2018 : cambiato porta per supportare HTTPS
+     
+    hostname: '86.107.98.69', 
+    /*port: 8080,*/
+    port: 8443,
+    rejectUnauthorized: false, 
+    path: '/AVA/rest/searchService/search_2?searchText=', 
+    method: 'POST', 
+    headers: {
+      'Content-Type': 'application/json', 
+      'Cookie':'' // +avaSession 
+    }
+  };
+ //PER TEST
 
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
+    //PER TEST
+   
+    app.get('/testLocale', function(req, res, next) {
+      
+        res.send('ok')
+        
+    
+    });
+//PER TEST
+app.get('/testSessione', function(req, res, next) {
+    
+        res.setHeader('Content-Type', 'text/html')
+        res.write("sono nella root ");
+        res.write('<p>views: ' + req.session.views + '</p>')
+        res.write('<p> id sessione ' + req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+    
+        res.end()
+    
+    })
 
-function getAccessToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
+
+ function WebhookProcessing(req, res) {
+    const agent = new WebhookClient({request: req, response: res});
+    //10/01/2019
+    //copiato codice da progetto api
+    console.log('------sono su HeadDemo app ----- la richiesta proviene da '+ agent.requestSource);
+    var name=req.body.queryResult.intent.name;
+    var displayname=req.body.queryResult.intent.displayName;
+    console.log('nome intent '+name+ ' , display name '+ displayname);
+    //******************************************* */
+  
+    //recupero la sessionId della conversazione
+    
+    agent.sessionId=req.body.session.split('/').pop();
+  //assegno all'agente il parametro di ricerca da invare sotto forma di searchText a Panloquacity
+    agent.parameters['Command']=req.body.queryResult.parameters.Command;
+    //recupero la data
+
+    agent.parameters['date']=req.body.queryResult.parameters.date;
+   console.log('la data = '+req.body.queryResult.parameters.date);
+    //fulfillment text
+    agent.fulfillmentText=req.body.queryResult.fulfillmentText;
+    console.log('----> fulfillment text =' +agent.fulfillmentText);
+    console.info(` sessione agente ` + agent.sessionId +` con parametri` + agent.parameters.Command);
+  //20/03/2019 fallback su plq
+    if (req.body.queryResult.parameters.searchText){
+
+      console.log(' ho param searchText per PLQ =' + req.body.queryResult.parameters.searchText);
+      agent.parameters['searchText']=req.body.queryResult.parameters.searchText;
+    }
+    //gestione degli intent
+    //nuovo del 21/03/2019 fallback intent
+      var blnIsFallback=req.body.queryResult.intent.isFallback;
+      console.log('blnIsFallback ?? '+blnIsFallback);
+     
+     //la funzione callAva sostiutisce la funzione welcome 
+     // callAVA anytext AnyText sostituisce 'qualunquetesto'
+      let intentMap = new Map();
+      if (blnIsFallback){
+  
+        //recupero il query text del body
+        var stringa=req.body.queryResult.queryText;
+        console.log('query text del fallback :'+stringa);
+        agent.queryText=stringa;
+        intentMap.set(displayname, callAVA);
+        console.log('funzione callAva per default fallback');
+      } else{
+        intentMap.set(displayname, callAVANEW); 
+        console.log('funzione callAVANEW per tutto il resto');
+      }
+    agent.handleRequest(intentMap);
+  }
+  
+  //app.post('/fulfillment', appDFActions);
+  app.post("/fulfillment", function (req,res){
+
+    console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+    console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
+    //console.log('vedo le var di sessione di Express ?? '+ req.session.id );
+    autenticate();
+    WebhookProcessing(req, res); 
+  
+  
   });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error retrieving access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
-      });
+
+ // 18/12/2018
+ function getComandi(arComandi)
+  {
+
+    var comandi=arComandi;
+    if (comandi.length>0){
+        //prosegui con il parsing
+        //caso 1: ho solo un comando, ad esempio lo stop->prosegui con il parsing
+        switch (comandi.length){
+          case 1:
+            comandi=arComandi;
+            break;
+
+          case 2:
+          //caso 2: ho due comandi, stop e img=path image, quindi devo scomporre comandi[1] 
+            var temp=arComandi[1].toString();
+            //temp=img=https.....
+            //splitto temp in un array con due elementi divisi da uguale
+            temp=temp.split("=");
+            console.log('valore di temp[1]= ' +temp[1]);
+            arComandi[1]=temp[1];
+            comandi=arComandi;
+
+            //scompongo arComandi[1]
+            break;
+
+          default:
+            //
+            console.log('sono in default');
+
+        }
+       return comandi; //ritorno array come mi serve STOP oppure STOP, PATH img
+      
+    } else {
+      console.log('non ci sono comandi')
+
+      //non ci sono comandi quindi non fare nulla
+      return undefined;
+    }
+   
+  } 
+
+ function autenticate(){
+
+    // Load client secrets from a local file.
+    fs.readFile('credentials.json', (err, content) => {
+      if (err) return console.log('Error loading client secret file:', err);
+      // Authorize a client with credentials, then call the Google Calendar API.
+      authorize(JSON.parse(content), WebhookProcessing);
+    });
+ }
+ function authorize(credentials, callback) {
+    const {client_secret, client_id, redirect_uris} = credentials.installed;
+    const oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_uris[0]);
+  
+    // Check if we have previously stored a token.
+    fs.readFile(TOKEN_PATH, (err, token) => {
+      if (err) return getAccessToken(oAuth2Client, callback);
+      oAuth2Client.setCredentials(JSON.parse(token));
       callback(oAuth2Client);
     });
-  });
-}
+  }
+  
+  
+  function getAccessToken(oAuth2Client, callback) {
+    const authUrl = oAuth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: SCOPES,
+    });
+    console.log('Authorize this app by visiting this url:', authUrl);
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    rl.question('Enter the code from that page here: ', (code) => {
+      rl.close();
+      oAuth2Client.getToken(code, (err, token) => {
+        if (err) return console.error('Error retrieving access token', err);
+        oAuth2Client.setCredentials(token);
+        // Store the token to disk for later program executions
+        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+          if (err) return console.error(err);
+          console.log('Token stored to', TOKEN_PATH);
+        });
+        callback(oAuth2Client);
+      });
+    });
+  }
+  
+ function callAVA(agent) {
+  return new Promise((resolve, reject) => {
+ 
+  let strRicerca=agent.queryText;
+   console.log('valore di strRicerca ' + strRicerca);
+  
+  var str= utf8.encode(strRicerca); 
+  if (str) {
+    strRicerca=querystring.escape(str); 
+    options.path+=strRicerca+'&user=&pwd=&ava='+bot;
+  }
+ 
+   let data = '';
+    let strOutput='';
+ 
+    const req = https.request(options, (res) => {
+    console.log(`STATUS DELLA RISPOSTA: ${res.statusCode}`);
+    console.log(`HEADERS DELLA RISPOSTA: ${JSON.stringify(res.headers)}`);
 
-/**
- * Lists the next 10 events on the user's primary calendar.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listEvents(auth) {
-  const calendar = google.calendar({version: 'v3', auth});
+
+    res.setEncoding('utf8');
+    res.on('data', (chunk) => {
+     console.log(`BODY: ${chunk}`);
+     data += chunk;
+  
+     let c=JSON.parse(data);
+      strOutput=c.output[0].output;
+      strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
+      agent.add(strOutput); 
+      resolve(agent);
+    });
+    res.on('end', () => {
+      console.log('No more data in response.');
+      options.path='/AVA/rest/searchService/search_2?searchText=';      
+      console.log('valore di options.path FINE ' +  options.path);
+ 
+    });
+  });
+   req.on('error', (e) => {
+   console.error(`problem with request: ${e.message}`);
+   strOutput="si è verificato errore " + e.message;
+
+  });
+
+   req.write(postData);
+  req.end();
+  });
+ }
+ /* fine modifica del 21/03/2019 */
+
+//mia nuova che non funziona 
+function callAVANEW(agent) { 
+    return new Promise((resolve, reject) => {
+  
+    let strRicerca='';
+   
+    let sessionId = agent.sessionId /*.split('/').pop()*/;
+    console.log('dentro call ava il mio session id '+sessionId);
+//questo lo tengo perchè mi serve per recuperare parametro comando proveniente dall'agente
+    var str= utf8.encode(agent.parameters.Command); 
+    if (str) {
+      strRicerca=querystring.escape(str); //lo tengo comunque
+     // options.path+=strRicerca+'&user=&pwd=&ava='+bot;
+    
+      console.log('il comando da passare : '+ strRicerca);
+    }  
+    var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
+    console.log('strOutput agente prima di EsseTre :' + strOutput);
+   
+    
+    //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
+      switch (strRicerca) {
+        case 'getLibretto':
+          console.log('sono nel getLibretto');
+        
+          controller.getLibretto().then((libretto)=> {
+            var strTemp='';
+           
+            // strOutput='ecco gli esami ';
+           
+            if (Array.isArray(libretto)){
+              
+              for(var i=0; i<libretto.length; i++){
+                
+               
+                strTemp+=  libretto[i].adDes+ ', frequentato  nell \'anno ' +libretto[i].aaFreqId +', anno di corso ' +
+                libretto[i].annoCorso + '\n';
+    
+              }
+              
+            }
+            //qui devo fare replace della @, che si trova in tmp[0]
+            var str=strOutput;
+            str=str.replace(/(@)/gi, strTemp);
+            strOutput=str;
+            agent.add(strOutput);
+            console.log('strOutput con replace '+ strOutput);
+           
+            resolve(agent);
+          }).catch((error) => {
+            console.log('Si è verificato errore : ' +error);
+            
+          
+          });
+          break;
+          //28/01/2019
+        case 'getInformazioni':
+  
+              //14/03/2109 il nuovo user è s262502 userId
+              controller.getCarriera(userId).then((carriera)=> {
+              var strTemp='';
+              strTemp+='Ti sei immatricolato nell anno '+ carriera.aaId + ' , con numero matricola  '+ carriera.matricola + ', nel corso di laurea '+ carriera.cdsDes +', tipo di corso di laurea '+ carriera.tipoCorsoDes; + 'percorso '+carriera.pdsDes +', stato attuale :' +carriera.motStastuDes
+              console.log('sono nella carriera ...');
+              // console.log('ho lo studente '+studente.codFisc + 'matricola ID '+ studente.trattiCarriera[0].matId);
+              // agent.setContext({ name: 'matricola', lifespan: 5, parameters: { matID: studente.trattiCarriera[0].matId }});
+              
+              var str=strOutput;
+              str=str.replace(/(@)/gi, strTemp);
+              strOutput=str;
+              agent.add(strOutput);
+              console.log('strOutput con replace '+ strOutput);
+              resolve(agent);
+              
+              }).catch((error) => {
+                console.log('Si è verificato errore : ' +error);
+                
+            
+              });
+              break;
+        case 'getStudente':
+        controller.getLibretto().then((libretto)=> {
+          var strTemp='';
+          // strOutput='ecco gli esami ';
+          if (Array.isArray(libretto)){
+            
+          
+              strTemp+='sei iscritto al ' +   libretto[0].annoCorso + ' anno di corso';
+              console.log('comando getStudente->getLibretto: ' + strTemp);
+          }
+          //qui devo fare replace della @, che si trova in tmp[0]
+          var str=strOutput;
+          str=str.replace(/(@)/gi, strTemp);
+          strOutput=str;
+          agent.add(strOutput);
+          console.log('strOutput con replace '+ strOutput);
+          resolve(agent);
+          }).catch((error) => {
+          console.log('Si è verificato errore : ' +error);
+          
+        
+        });
+          break;
+        //28/01/2019
+        //19/03/2019 resta così per il momento
+        case 'getNumeroMatricola':
+          controller.getCarriera(userId).then((carriera)=> {
+            var strTemp='';
+            strTemp+='' + carriera.matricola;
+          console.log('chiedo il numero di matricola ...');
+          // console.log('ho lo studente '+studente.codFisc + 'matricola ID '+ studente.trattiCarriera[0].matId);
+          // agent.setContext({ name: 'matricola', lifespan: 5, parameters: { matID: studente.trattiCarriera[0].matId }});
+            
+          var str=strOutput;
+          str=str.replace(/(@)/gi, strTemp);
+          strOutput=str;
+          agent.add(strOutput);
+          console.log('strOutput con replace '+ strOutput);
+          resolve(agent);
+            
+          }).catch((error) => {
+            
+            var strError='Si è verificato errore : ' +error;
+            console.log(strError);
+            agent.add(strError);
+            resolve(agent);
+          });
+          break;
+          //28/01/2019
+          case 'getAnnoImmatricolazione':
+          controller.getCarriera(userId).then((carriera)=> {
+            var strTemp='';
+            var dt=carriera.dataImm; //elimino minuti e secondi
+            strTemp+='' + dt.substring(0,10);
+          console.log('chiedo la data immatricolazione...');
+          // console.log('ho lo studente '+studente.codFisc + 'matricola ID '+ studente.trattiCarriera[0].matId);
+          // agent.setContext({ name: 'matricola', lifespan: 5, parameters: { matID: studente.trattiCarriera[0].matId }});
+            
+          var str=strOutput;
+          str=str.replace(/(@)/gi, strTemp);
+          strOutput=str;
+          agent.add(strOutput);
+          console.log('strOutput con replace '+ strOutput);
+          resolve(agent);
+            
+          }).catch((error) => {
+            console.log('Si è verificato errore : ' +error);
+            
+          
+          });
+          break;
+          
+        
+          //28/01/2019 AGGIUNTO ANCHE LO STOP
+          case 'STOP':
+          if (agent.requestSource=="ACTIONS_ON_GOOGLE"){
+                  
+          
+
+            let conv = agent.conv();
+  
+            console.log(' ---- la conversazione PRIMA ----- ' + JSON.stringify(conv));
+            
+            conv.close(strOutput);
+            console.log(' ---- la conversazione DOPO CHIUSURA ----- ' + JSON.stringify(conv));
+            
+            agent.add(conv);
+            //altrimenti ritorna la strOutput
+          } else{
+            agent.add(strOutput);
+          }
+          resolve(agent);
+          break;
+        
+        default:
+          //console.log('nel default ho solo strOutput :' +responseFromPlq.strOutput);
+          console.log('nel default ');
+          agent.add('sono nel default');
+          resolve(agent);
+          break;
+      } //fine switch
+        
+      /* agent.add('il comando è '+ tmp[0]);
+       resolve(agent);*/
+        
+       }).catch((error) => {
+      
+         console.log('errore '+ error);
+       
+      });  
+  // });
+  
+} 
+/*************  */
+ //funzione mia
+ function listAppointment (dateTimeStart) {
+ 
+     var pd=convertParametersDateMia(dateTimeStart,true);
+     var fine=convertParametersDateMia(dateTimeStart,false);
+   
+     
+    console.log('la data di inizio è ' + pd + ', fine è ' + fine);
+    agent.add('la data di inizio è ' + pd + ', fine è ' + fine);
+   /*
+
+    return listEvents(pd).then((events) => {
+      console.log('sono in listEvents');
+        var strTemp='';
+   
+       if (events.length){
+          for(var i=0; i<events.length; i++){
+             var start=new Date(events[i].start.dateTime).toDateString();
+             start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+           
+            strTemp+='Il giorno  '+start + ' hai questi appuntamenti: '+ events[i].summary;
+            console.log('strTemp ' + strTemp);
+          }
+          agent.add(strTemp);
+        }else{
+          agent.add('Non hai eventi per questa data ' + (new Date(pd)).toDateString());
+        }
+     
+  
+    }).catch(() => {
+      agent.add('PD: qualcosa è andato storto');
+    });*/
+    resolve(agent);
+  }
+
+  function listEvents(paramDate) {
+    return new Promise((resolve, reject) => {
+     var pd=convertParametersDateMia(paramDate,true);
+     var fine=convertParametersDateMia(paramDate,false);
+       console.log('////////////////la data di inizio è ' + pd + ', fine è ' + fine);
   calendar.events.list({
-    calendarId: 'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com', // primary jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com
-    timeMax: '2019-03-28T12:00:00+01:00',//(new Date()).toISOString(),
+    auth: serviceAccountAuth,
+    calendarId: calendarId,
+    timeMin: pd, // paramDate proviene dai params (new Date()).toISOString(),
+    timeMax:fine,
     maxResults: 10,
     singleEvents: true,
-    orderBy: 'startTime'
-    
+    orderBy: 'startTime',
   }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
+    if (err) return console.log('The API returned an error da listEvent: ' + err);
     const events = res.data.items;
     if (events.length) {
-      console.log('Upcoming 10 events:');
+      //console.log('Upcoming 10 events:');
       events.map((event, i) => {
-        //  if (event.start.date ==='2019-03-28'){ 
-            const start = event.start.dateTime || event.start.date;
-            const end=event.end.dateTime || event.end.date;
-            if(start==='2019-03-29T09:00:00+01:00')
-            console.log('DATA TROVATA');
-            console.log(`${start} - ${event.summary} - ${end}`);
-        //  }
+        var start = event.start.dateTime || event.start.date;
        
+        console.log(`${start} - ${event.summary}`);
+        start=new Date(start).toDateString();
+        console.log('start ora : ' + start);
+        /*if(start===paramDate)
+            console.log('DATA TROVATA');*/
+        
       });
-    } else {
-      console.log('No upcoming events found.');
-    }
-  });
-  /*
-  var event = {
-    'summary': 'ancora prova 2019',
-    'location': 'Via Via ',
-    'description': 'PROVA PROVA PROVA',
-    'start': {
-        'dateTime': '2019-03-30T09:00:00-09:00',
      
-    },
-    'end': {
-      
-        'dateTime': '2019-03-30T09:00:00-11:00',
-    },
-   
-    'attendees': [
-      {'email': 'valeadami@gmail.com'},
-      {'email': 'dialobot@gmail.com'},
-    ],
-    'reminders': {
-      'useDefault': false,
-      'overrides': [
-        {'method': 'email', 'minutes': 24 * 60},
-        {'method': 'popup', 'minutes': 10},
-      ],
-    },
-  };
-  
-  calendar.events.insert({
-    auth: auth,
-    calendarId: 'primary',
-    resource: event,
-  }, function(err, event) {
-    if (err) {
-      console.log('There was an error contacting the Calendar service: ' + err);
-      return;
+    } else {
+      console.log('Non ci sono appuntamenti nel futuro.');
+      //resolve('No upcoming events found');
     }
-    console.log('Event created: %s', event.htmlLink);
-  });*/
-  //qui aggiungo evento
+    //risolvo events, caricati o meno
+     resolve(events);
+  });
+});
+}
+// A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
+function addHours(dateObj, hoursToAdd){
+    return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
+  }
   
-}
-function checazzo(auth)
-{
-    const calendar = google.calendar({version: 'v3', auth});
+  // A helper function that converts the Date instance 'dateObj' into a string that represents this time in English.
+  function getLocaleTimeString(dateObj){
+    return dateObj.toLocaleTimeString('it-IT', { hour: 'numeric', hour12: true, timeZone: timeZone });
+  }
+  
+  // A helper function that converts the Date instance 'dateObj' into a string that represents this date in English.
+  function getLocaleDateString(dateObj){
+    return dateObj.toLocaleDateString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+  } 
+  function convertParametersDate(date, time){
+    return new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
+  }
+  //funzione mia per recuperare la data solo
+  function convertParametersDateMia(date, blnStart=true){
+    var strData=[];
+  
+    strData=date.split('T');
+    var s=strData[0];
+    console.log('strData[0] = '+  s);
     
-}
-
-// [END calendar_quickstart]
-
-module.exports = {
-  SCOPES,
-  listEvents,
-  checazzo
-};
+    if (blnStart)
+        s+='T'+'00:00:00'+timeZoneOffset;
+    else
+      s+='T'+'23:59:59'+timeZoneOffset;
+    console.log('la data ottenuta infine è ' + s);  
+    return s;
+  
+  }
+app.listen(process.env.PORT || 3000, function() {
+    console.log("App started on port " + process.env.PORT );
+  });
