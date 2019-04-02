@@ -43,11 +43,9 @@ app.use(session({
 //uso le variabili di sessione
 app.use(function (req, res, next) {
     
-    req.session.username='';
-    req.session.matId='';
-    req.session.stuId='';
-    
-  
+    req.session.client_email=process.env.GOOGLE_CLIENT_EMAIL;
+    req.session.private_key=process.env.GOOGLE_CLIENT_PRIVATE_KEY;
+   
     next();
   })
   postData = querystring.stringify({
@@ -74,9 +72,9 @@ app.use(function (req, res, next) {
   };
 
   const SCOPES = 'https://www.googleapis.com/auth/calendar';
-  const calendarId = 'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com';
-  var serviceAccount={}; //verrà dalla lettura delle var di ambiente di Heroku
-  var serviceAccountAuth={};
+  const calendarId = process.env.GOOGLE_CALENDAR_ID; //'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com';
+  
+  var serviceAccountAuth={}; //verrà dalla lettura delle var di ambiente di Heroku
   
   const calendar = google.calendar('v3');
   //process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
@@ -89,8 +87,8 @@ app.use(function (req, res, next) {
    
     app.get('/', function(req, res, next) {
       
-        res.send('ok')
-       
+       // res.send('ok')
+        res.send('<p>chiave: ' + req.session.private_key + ', email ' +req.session.client_email +'</p>');
        
      });
     app.get('/testLocale', function(req, res, next) {
@@ -135,7 +133,7 @@ app.get('/testSessione', function(req, res, next) {
 
  function WebhookProcessing(req, res) {
     const agent = new WebhookClient({request: req, response: res});
-    console.log('DA WebhookProcessing: questi i valori di serviceAccountAuth: email ' + serviceAccountAuth.email + ', key: ' +serviceAccountAuth.key +', con scope '+ SCOPES);
+    console.log('DA WebhookProcessing: questi i valori di serviceAccountAuth: email ' + req.session.client_email + ', key: ' +req.session.private_key +', con scope '+ SCOPES);
     //10/01/2019
     //copiato codice da progetto api
     console.log('------sono su HeadDemo app ----- la richiesta proviene da '+ agent.requestSource);
