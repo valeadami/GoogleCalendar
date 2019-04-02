@@ -44,7 +44,9 @@ app.use(session({
 app.use(function (req, res, next) {
    
     req.session.client_email=process.env.GOOGLE_CLIENT_EMAIL;
-    const fixedKey = process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(new RegExp("\\\\n", "\g"), "\n");
+    const fixedKey = process.env.GOOGLE_SERVICE_PRIVATE_KEY
+    fixedKey=fixedKey.replace(new RegExp("\\\\n", "\g"), "\n");
+    console.log('DOPO REPLACE DE sto cazzo de fixedKey '+ fixedKey);
     req.session.private_key=fixedKey;
 
     
