@@ -78,9 +78,21 @@ app.use(function (req, res, next) {
    
     app.get('/testLocale', function(req, res, next) {
       
-        res.send('ok')
-        
-    
+       // res.send('ok')
+       //provo a leggere le variabili di ambiente settate su Heroku
+       res.send('i valori di GOOGLE_APPLICATION_CREDENTIALS ' + process.env.GOOGLE_APPLICATION_CREDENTIALS + ', e di  process.env.GOOGLE_CONFIG ' +  process.env.GOOGLE_CONFIG);
+       
+        console.log('i valori di GOOGLE_APPLICATION_CREDENTIALS ' + process.env.GOOGLE_APPLICATION_CREDENTIALS + ', e di  process.env.GOOGLE_CONFIG ' +  process.env.GOOGLE_CONFIG);
+       /* fs.writeFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, process.env.GOOGLE_CONFIG, (err) => {
+            if (err) {
+                console.log('ERRORE '+err);
+                throw err;
+              
+              } else {
+              console.log('SCRIVO IL FILE : '+process.env.GOOGLE_CONFIG);
+              
+              }
+        });*/
     });
 //PER TEST
 app.get('/testSessione', function(req, res, next) {
@@ -153,7 +165,7 @@ app.get('/testSessione', function(req, res, next) {
     console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
     console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
     //console.log('vedo le var di sessione di Express ?? '+ req.session.id );
-    autenticate();
+  //  autenticate();
     WebhookProcessing(req, res); 
   
   
