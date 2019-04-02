@@ -7,7 +7,7 @@ const session = require('express-session');
 const request = require('request');
 const google = require('googleapis');
 const querystring = require('querystring');
-const readline = require('readline');
+//const readline = require('readline');
 //const path = require("path");
 const https = require('https');
 
@@ -20,8 +20,8 @@ const {WebhookClient} = require('dialogflow-fulfillment');
 const fs = require("fs");
 const utf8=require('utf8');
 //file di configurazione
-const env = require('node-env-file');
-env(__dirname + '/.env');
+/*const env = require('node-env-file');
+env(__dirname + '/.env');*/
 
 const TOKEN_PATH = 'token.json';
 const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
@@ -75,7 +75,12 @@ app.use(function (req, res, next) {
  //PER TEST
 
     //PER TEST
-   
+    app.get('/', function(req, res, next) {
+      
+        res.send('ok')
+       
+       
+     });
     app.get('/testLocale', function(req, res, next) {
       
        // res.send('ok')
@@ -212,7 +217,7 @@ app.get('/testSessione', function(req, res, next) {
     }
    
   } 
-
+/*
  function autenticate(){
 
     // Load client secrets from a local file.
@@ -260,7 +265,7 @@ app.get('/testSessione', function(req, res, next) {
       });
     });
   }
-  
+  */
  function callAVA(agent) {
   return new Promise((resolve, reject) => {
  
@@ -333,134 +338,11 @@ function callAVANEW(agent) {
     
     //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
       switch (strRicerca) {
-        case 'getLibretto':
-          console.log('sono nel getLibretto');
-        
-          controller.getLibretto().then((libretto)=> {
-            var strTemp='';
-           
-            // strOutput='ecco gli esami ';
-           
-            if (Array.isArray(libretto)){
-              
-              for(var i=0; i<libretto.length; i++){
-                
-               
-                strTemp+=  libretto[i].adDes+ ', frequentato  nell \'anno ' +libretto[i].aaFreqId +', anno di corso ' +
-                libretto[i].annoCorso + '\n';
-    
-              }
-              
-            }
-            //qui devo fare replace della @, che si trova in tmp[0]
-            var str=strOutput;
-            str=str.replace(/(@)/gi, strTemp);
-            strOutput=str;
-            agent.add(strOutput);
-            console.log('strOutput con replace '+ strOutput);
-           
-            resolve(agent);
-          }).catch((error) => {
-            console.log('Si è verificato errore : ' +error);
-            
-          
-          });
-          break;
-          //28/01/2019
         case 'getInformazioni':
-  
-              //14/03/2109 il nuovo user è s262502 userId
-              controller.getCarriera(userId).then((carriera)=> {
-              var strTemp='';
-              strTemp+='Ti sei immatricolato nell anno '+ carriera.aaId + ' , con numero matricola  '+ carriera.matricola + ', nel corso di laurea '+ carriera.cdsDes +', tipo di corso di laurea '+ carriera.tipoCorsoDes; + 'percorso '+carriera.pdsDes +', stato attuale :' +carriera.motStastuDes
-              console.log('sono nella carriera ...');
-              // console.log('ho lo studente '+studente.codFisc + 'matricola ID '+ studente.trattiCarriera[0].matId);
-              // agent.setContext({ name: 'matricola', lifespan: 5, parameters: { matID: studente.trattiCarriera[0].matId }});
-              
-              var str=strOutput;
-              str=str.replace(/(@)/gi, strTemp);
-              strOutput=str;
-              agent.add(strOutput);
-              console.log('strOutput con replace '+ strOutput);
-              resolve(agent);
-              
-              }).catch((error) => {
-                console.log('Si è verificato errore : ' +error);
-                
-            
-              });
-              break;
-        case 'getStudente':
-        controller.getLibretto().then((libretto)=> {
-          var strTemp='';
-          // strOutput='ecco gli esami ';
-          if (Array.isArray(libretto)){
-            
-          
-              strTemp+='sei iscritto al ' +   libretto[0].annoCorso + ' anno di corso';
-              console.log('comando getStudente->getLibretto: ' + strTemp);
-          }
-          //qui devo fare replace della @, che si trova in tmp[0]
-          var str=strOutput;
-          str=str.replace(/(@)/gi, strTemp);
-          strOutput=str;
-          agent.add(strOutput);
-          console.log('strOutput con replace '+ strOutput);
-          resolve(agent);
-          }).catch((error) => {
-          console.log('Si è verificato errore : ' +error);
-          
+          console.log('sono nel getInformazioni');
         
-        });
-          break;
-        //28/01/2019
-        //19/03/2019 resta così per il momento
-        case 'getNumeroMatricola':
-          controller.getCarriera(userId).then((carriera)=> {
-            var strTemp='';
-            strTemp+='' + carriera.matricola;
-          console.log('chiedo il numero di matricola ...');
-          // console.log('ho lo studente '+studente.codFisc + 'matricola ID '+ studente.trattiCarriera[0].matId);
-          // agent.setContext({ name: 'matricola', lifespan: 5, parameters: { matID: studente.trattiCarriera[0].matId }});
-            
-          var str=strOutput;
-          str=str.replace(/(@)/gi, strTemp);
-          strOutput=str;
-          agent.add(strOutput);
-          console.log('strOutput con replace '+ strOutput);
-          resolve(agent);
-            
-          }).catch((error) => {
-            
-            var strError='Si è verificato errore : ' +error;
-            console.log(strError);
-            agent.add(strError);
-            resolve(agent);
-          });
-          break;
-          //28/01/2019
-          case 'getAnnoImmatricolazione':
-          controller.getCarriera(userId).then((carriera)=> {
-            var strTemp='';
-            var dt=carriera.dataImm; //elimino minuti e secondi
-            strTemp+='' + dt.substring(0,10);
-          console.log('chiedo la data immatricolazione...');
-          // console.log('ho lo studente '+studente.codFisc + 'matricola ID '+ studente.trattiCarriera[0].matId);
-          // agent.setContext({ name: 'matricola', lifespan: 5, parameters: { matID: studente.trattiCarriera[0].matId }});
-            
-          var str=strOutput;
-          str=str.replace(/(@)/gi, strTemp);
-          strOutput=str;
-          agent.add(strOutput);
-          console.log('strOutput con replace '+ strOutput);
-          resolve(agent);
-            
-          }).catch((error) => {
-            console.log('Si è verificato errore : ' +error);
-            
           
-          });
-          break;
+          
           
         
           //28/01/2019 AGGIUNTO ANCHE LO STOP
