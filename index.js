@@ -75,8 +75,8 @@ app.use(function (req, res, next) {
 
   const SCOPES = 'https://www.googleapis.com/auth/calendar';
   const calendarId = 'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com';
-  const serviceAccount={}; //verrà dalla lettura delle var di ambiente di Heroku
-  const serviceAccountAuth={};
+  var serviceAccount={}; //verrà dalla lettura delle var di ambiente di Heroku
+  var serviceAccountAuth={};
   
   const calendar = google.calendar('v3');
   //process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
