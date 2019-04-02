@@ -42,9 +42,12 @@ app.use(session({
   }));
 //uso le variabili di sessione
 app.use(function (req, res, next) {
-    
+   
     req.session.client_email=process.env.GOOGLE_CLIENT_EMAIL;
-    req.session.private_key=process.env.GOOGLE_CLIENT_PRIVATE_KEY;
+    const fixedKey = process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(new RegExp("\\\\n", "\g"), "\n");
+    req.session.private_key=fixedKey;
+
+    
    
     next();
   })
@@ -143,10 +146,11 @@ app.get('/testSessione', function(req, res, next) {
             scopes: SCOPES
         });
     }else{
-
+        const fixedKey = process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(new RegExp("\\\\n", "\g"), "\n");
+       
         serviceAccountAuth = new google.auth.JWT({
             email: process.env.GOOGLE_CLIENT_EMAIL,
-            key: process.env.GOOGLE_CLIENT_PRIVATE_KEY,
+            key: fixedKey,
             scopes: SCOPES
         });
     }
