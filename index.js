@@ -135,6 +135,7 @@ app.get('/testSessione', function(req, res, next) {
 
  function WebhookProcessing(req, res) {
     const agent = new WebhookClient({request: req, response: res});
+    console.log('DA WebhookProcessing: questi i valori di serviceAccountAuth: email ' + serviceAccountAuth.email + ', key: ' +serviceAccountAuth.key +', con scope '+ SCOPES);
     //10/01/2019
     //copiato codice da progetto api
     console.log('------sono su HeadDemo app ----- la richiesta proviene da '+ agent.requestSource);
