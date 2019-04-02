@@ -332,7 +332,7 @@ function callAVANEW(agent) {
             console.log('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
            /* agent.add('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
             resolve(agent);*/
-            listAppointment(dataRichiesta);
+            listAppointment(agent);
             break;
           
           
