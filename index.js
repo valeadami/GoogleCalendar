@@ -50,7 +50,7 @@ app.use(function (req, res, next) {
 
     fixedKey=fixedKey.replace(new RegExp("\\\\n", "\g"), "\n");
     console.log('DOPO REPLACE DE sto cazzo de fixedKey '+ fixedKey);
-
+    req.session.private_key= fixedKey;
   
     
    
@@ -152,7 +152,7 @@ app.get('/testSessione', function(req, res, next) {
         });
     }else{
         console.log('sono in webhook per prendere chiave');
-        const fixedKey = process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(new RegExp("\\\\n", "\g"), "\n");
+        var fixedKey = process.env.GOOGLE_CLIENT_PRIVATE_KEY.replace(new RegExp("\\\\n", "\g"), "\n");
        
         serviceAccountAuth = new google.auth.JWT({
             email: process.env.GOOGLE_CLIENT_EMAIL,
