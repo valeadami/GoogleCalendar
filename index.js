@@ -380,10 +380,10 @@ function callAVANEW(agent) {
 } 
 /*************  */
  //funzione mia
- function listAppointment (dateTimeStart) {
+ function listAppointment (agent) {
  
-     var pd=convertParametersDateMia(dateTimeStart,true);
-     var fine=convertParametersDateMia(dateTimeStart,false);
+     var pd=convertParametersDateMia(agent.parameters.date,true);
+     var fine=convertParametersDateMia(agent.parameters.date,false);
    
      
     console.log('la data di inizio è ' + pd + ', fine è ' + fine);
