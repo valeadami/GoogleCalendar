@@ -23,8 +23,8 @@ const utf8=require('utf8');
 /*const env = require('node-env-file');
 env(__dirname + '/.env');*/
 
-const TOKEN_PATH = 'token.json';
-const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
+//const TOKEN_PATH = 'token.json';
+
 var app = express();
 /*var bot='HEAD'; // modificato in data 14/03/2019 in HEAD -->HEADdemo FarmaInfoBot
 app.set("views", path.join(__dirname, "views"));
@@ -72,9 +72,21 @@ app.use(function (req, res, next) {
       'Cookie':'' // +avaSession 
     }
   };
+
+  const SCOPES = 'https://www.googleapis.com/auth/calendar';
+  const calendarId = 'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com';
+  const serviceAccount={}; //verrà dalla lettura delle var di ambiente di Heroku
+  const serviceAccountAuth={};
+  
+  const calendar = google.calendar('v3');
+  process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
+  
+  const timeZone = 'Europe/Rome';  // Change it to your time zone
+  const timeZoneOffset = '+01:00'; 
+  
  //PER TEST
 
-    //PER TEST
+   
     app.get('/', function(req, res, next) {
       
         res.send('ok')
@@ -85,10 +97,19 @@ app.use(function (req, res, next) {
       
        // res.send('ok')
        //provo a leggere le variabili di ambiente settate su Heroku
-       res.send('i valori di GOOGLE_APPLICATION_CREDENTIALS ' + process.env.GOOGLE_APPLICATION_CREDENTIALS + ', e di  process.env.GOOGLE_CONFIG ' +  process.env.GOOGLE_CONFIG);
+       res.send('i valori di process.env.GOOGLE_CLIENT_EMAIL ' + process.env.GOOGLE_CLIENT_EMAIL + ', e di  process.env.GOOGLE_CLIENT_PRIVATE_KEY ' +  process.env.GOOGLE_CLIENT_PRIVATE_KEY);
        
-        console.log('i valori di GOOGLE_APPLICATION_CREDENTIALS ' + process.env.GOOGLE_APPLICATION_CREDENTIALS + ', e di  process.env.GOOGLE_CONFIG ' +  process.env.GOOGLE_CONFIG);
-       /* fs.writeFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, process.env.GOOGLE_CONFIG, (err) => {
+        
+         // Set up Google Calendar service account credentials
+         serviceAccountAuth = new google.auth.JWT({
+            email: process.env.GOOGLE_CLIENT_EMAIL,
+            key: process.env.GOOGLE_CLIENT_PRIVATE_KEY,
+            scopes: SCOPES
+        });
+       console.log('questi i valori di serviceAccountAuth: email ' + serviceAccountAuth.email + ', key: ' +serviceAccountAuth.key +', con scope '+ SCOPES);
+       
+       
+        /* fs.writeFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, process.env.GOOGLE_CONFIG, (err) => {
             if (err) {
                 console.log('ERRORE '+err);
                 throw err;
