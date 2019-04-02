@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const session = require('express-session');
 /*********** */
 const request = require('request');
-const google = require('googleapis');
+const {google} = require('googleapis');
 const querystring = require('querystring');
 //const readline = require('readline');
 //const path = require("path");
@@ -79,7 +79,7 @@ app.use(function (req, res, next) {
   const serviceAccountAuth={};
   
   const calendar = google.calendar('v3');
-  process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
+  //process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
   
   const timeZone = 'Europe/Rome';  // Change it to your time zone
   const timeZoneOffset = '+01:00'; 
