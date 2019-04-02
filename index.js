@@ -93,9 +93,9 @@ app.use(function (req, res, next) {
      });
     app.get('/testLocale', function(req, res, next) {
       
-       // res.send('ok')
+       res.send('ok')
        //provo a leggere le variabili di ambiente settate su Heroku
-       res.send('i valori di process.env.GOOGLE_CLIENT_EMAIL ' + process.env.GOOGLE_CLIENT_EMAIL + ', e di  process.env.GOOGLE_CLIENT_PRIVATE_KEY ' +  process.env.GOOGLE_CLIENT_PRIVATE_KEY);
+       /*res.send('i valori di process.env.GOOGLE_CLIENT_EMAIL ' + process.env.GOOGLE_CLIENT_EMAIL + ', e di  process.env.GOOGLE_CLIENT_PRIVATE_KEY ' +  process.env.GOOGLE_CLIENT_PRIVATE_KEY);
        
         
          // Set up Google Calendar service account credentials
@@ -105,7 +105,7 @@ app.use(function (req, res, next) {
             scopes: SCOPES
         });
        console.log('questi i valori di serviceAccountAuth: email ' + serviceAccountAuth.email + ', key: ' +serviceAccountAuth.key +', con scope '+ SCOPES);
-       
+       */
        
         /* fs.writeFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, process.env.GOOGLE_CONFIG, (err) => {
             if (err) {
@@ -133,7 +133,24 @@ app.get('/testSessione', function(req, res, next) {
 
  function WebhookProcessing(req, res) {
     const agent = new WebhookClient({request: req, response: res});
-    console.log('DA WebhookProcessing: questi i valori di serviceAccountAuth: email ' + req.session.client_email + ', key: ' +req.session.private_key +', con scope '+ SCOPES);
+    console.log('DA WebhookProcessing con SESSIONE : questi i valori di serviceAccountAuth: email ' + req.session.client_email + ', key: ' +req.session.private_key +', con scope '+ SCOPES);
+    if (req.session.client_email && req.session.private_key){
+
+
+        serviceAccountAuth = new google.auth.JWT({
+            email: req.session.client_email,
+            key: req.session.private_key,
+            scopes: SCOPES
+        });
+    }else{
+
+        serviceAccountAuth = new google.auth.JWT({
+            email: process.env.GOOGLE_CLIENT_EMAIL,
+            key: process.env.GOOGLE_CLIENT_PRIVATE_KEY,
+            scopes: SCOPES
+        });
+    }
+    
     //10/01/2019
     //copiato codice da progetto api
     console.log('------sono su HeadDemo app ----- la richiesta proviene da '+ agent.requestSource);
@@ -352,15 +369,18 @@ function callAVANEW(agent) {
     
       console.log('il comando da passare : '+ strRicerca);
     }  
+    var dataRichiesta=agent.parameters.date;
     var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
     console.log('strOutput agente prima di EsseTre :' + strOutput);
    
     
     //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
       switch (strRicerca) {
-        case 'getInformazioni':
-          console.log('sono nel getInformazioni');
-        
+        case 'getAppuntamenti':
+            console.log('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
+            agent.add('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
+            resolve(agent);
+            break;
           
           
           
