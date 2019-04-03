@@ -413,7 +413,7 @@ function callAVANEW(agent) {
             console.log('strTemp ' + strTemp);
           }
           agent.add(strTemp);
-          //resolve(agent);
+          resolve(agent);
         }else{
           agent.add('Non hai eventi per questa data ' + (new Date(pd)).toDateString());
           //resolve(agent);
