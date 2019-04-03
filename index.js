@@ -323,8 +323,8 @@ function callAVANEW(agent) {
     var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
     //03/04/2019 per inserimento appuntamento
     var titoloApp=agent.parameters.any;
-    var orarioApp=new Date(agent.parameters.time);
-    console.log('strOutput agente prima di EsseTre :' + strOutput);
+    var orarioApp=agent.parameters.time;
+    console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con orarioApp '+orarioApp);
    
     
     //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
@@ -559,7 +559,11 @@ function addHours(dateObj, hoursToAdd){
     return dateObj.toLocaleDateString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
   } 
   function convertParametersDate(date, time){
-    return new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
+      console.log('sto cazzo de date '+date + ' e sto cazzo de time ' + time);
+      var v=new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
+      console.log('sto cazzo de convert '+v);
+      return v;
+    //new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
   }
   //funzione mia per recuperare la data solo
   function convertParametersDateMia(date, blnStart=true){
