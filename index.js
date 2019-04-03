@@ -346,12 +346,16 @@ function callAVANEW(agent) {
             var strTemp='';
             listEvents(dataRichiesta).then((events)=>{
                 if (Array.isArray(events)){
-                    strTemp='Il giorno  '+dataRichiesta + ' hai questi appuntamenti:\n';
+                    strTemp='Il giorno  '+ new Date(dataRichiesta).toDateString()+ ' hai questi appuntamenti:\n';
                     for(var i=0; i<events.length; i++){
                         var start=new Date(events[i].start.dateTime).toDateString();
+                        console.log('-----  prima start '+ start);
+                       
+
                         start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
-                      
-                       strTemp+= events[i].summary +'\n';
+                        console.log('-----  DOPO start '+ start);
+                       
+                       strTemp+= events[i].summary +' alle ore ' + start +'\n';
                        console.log('strTemp ' + strTemp);
                      }
                 }   // fine if
@@ -424,7 +428,7 @@ function callAVANEW(agent) {
              var start=new Date(events[i].start.dateTime).toDateString();
              start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
            
-            strTemp+='Il giorno  '+start + ' hai questi appuntamenti: '+ events[i].summary;
+            strTemp+='Il giorno  '+start + ' hai questi appuntamenti: '+ events[i].summary ;
             console.log('strTemp ' + strTemp);
           }
           agent.add(strTemp);
