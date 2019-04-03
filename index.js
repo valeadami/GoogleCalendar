@@ -372,6 +372,8 @@ function callAVANEW(agent) {
           
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
+            var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
+            console.log('*********dateTimeStart '+dateTimeStart);
             createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
                 console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
 
@@ -514,7 +516,7 @@ function createNewAppointment (agent) {
     return new Promise((resolve, reject) => {
 
         const appointmentDuration = 1;// Define the length of the appointment to be one hour.
-        const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
+      //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
         const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
        
       calendar.events.list({  // List all events in the specified time period
