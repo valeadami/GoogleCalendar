@@ -455,7 +455,7 @@ function callAVANEW(agent) {
             console.log('DATA TROVATA');*/
         
       });
-     
+      resolve(events);
     } else {
       console.log('Non ci sono appuntamenti nel futuro.');
       //resolve('No upcoming events found');
@@ -463,7 +463,7 @@ function callAVANEW(agent) {
     //risolvo events, caricati o meno
      
   });
-  resolve(events);
+ 
 });
 }
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
