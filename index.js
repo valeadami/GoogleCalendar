@@ -518,7 +518,7 @@ function callAVANEW(agent) {
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
 
-        const appointmentDuration = 3;// Define the length of the appointment to be one hour.
+        const appointmentDuration = 1;// Define the length of the appointment to be one hour.
       //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
       var dinizio=new Date(dateTimeStart);
 
