@@ -46,12 +46,12 @@ app.use(function (req, res, next) {
     req.session.client_email=process.env.GOOGLE_CLIENT_EMAIL;
     var fixedKey = process.env.GOOGLE_CLIENT_PRIVATE_KEY;
     req.session.private_key= process.env.GOOGLE_CLIENT_PRIVATE_KEY; //fixedKey;
-    console.log('sti cazzi de var de sessione in app.use '+ req.session.client_email + ', chiave '+req.session.private_key);
+    //console.log('sti cazzi de var de sessione in app.use '+ req.session.client_email + ', chiave '+req.session.private_key);
 
     fixedKey=fixedKey.replace(new RegExp("\\\\n", "\g"), "\n");
-    console.log('DOPO REPLACE DE sto cazzo de fixedKey '+ fixedKey);
+    //console.log('DOPO REPLACE DE sto cazzo de fixedKey '+ fixedKey);
     req.session.private_key= fixedKey;
-    console.log('CALENDARIO DI NOME '+calendarId);
+    //console.log('CALENDARIO DI NOME '+calendarId);
   
     
    
@@ -103,29 +103,7 @@ app.use(function (req, res, next) {
     app.get('/testLocale', function(req, res, next) {
       
        res.send('ok')
-       //provo a leggere le variabili di ambiente settate su Heroku
-       /*res.send('i valori di process.env.GOOGLE_CLIENT_EMAIL ' + process.env.GOOGLE_CLIENT_EMAIL + ', e di  process.env.GOOGLE_CLIENT_PRIVATE_KEY ' +  process.env.GOOGLE_CLIENT_PRIVATE_KEY);
-       
-        
-         // Set up Google Calendar service account credentials
-         serviceAccountAuth = new google.auth.JWT({
-            email: process.env.GOOGLE_CLIENT_EMAIL,
-            key: process.env.GOOGLE_CLIENT_PRIVATE_KEY,
-            scopes: SCOPES
-        });
-       console.log('questi i valori di serviceAccountAuth: email ' + serviceAccountAuth.email + ', key: ' +serviceAccountAuth.key +', con scope '+ SCOPES);
-       */
-       
-        /* fs.writeFile(process.env.GOOGLE_APPLICATION_CREDENTIALS, process.env.GOOGLE_CONFIG, (err) => {
-            if (err) {
-                console.log('ERRORE '+err);
-                throw err;
-              
-              } else {
-              console.log('SCRIVO IL FILE : '+process.env.GOOGLE_CONFIG);
-              
-              }
-        });*/
+      
     });
 //PER TEST
 app.get('/testSessione', function(req, res, next) {
@@ -176,9 +154,9 @@ app.get('/testSessione', function(req, res, next) {
   //assegno all'agente il parametro di ricerca da invare sotto forma di searchText a Panloquacity
     agent.parameters['Command']=req.body.queryResult.parameters.Command;
     //recupero la data
-
     agent.parameters['date']=req.body.queryResult.parameters.date;
    console.log('la data = '+req.body.queryResult.parameters.date);
+
     //fulfillment text
     agent.fulfillmentText=req.body.queryResult.fulfillmentText;
     console.log('----> fulfillment text =' +agent.fulfillmentText);
@@ -345,8 +323,9 @@ function callAVANEW(agent) {
             resolve(agent);*/
             var strTemp='';
             listEvents(dataRichiesta).then((events)=>{
-                if (Array.isArray(events)){
-                    strTemp='Il giorno  '+ new Date(dataRichiesta).toDateString()+ ' hai questi appuntamenti:\n';
+                //if (Array.isArray(events)){
+                if (events.length){
+                   // strTemp='Il giorno  '+ new Date(dataRichiesta).toDateString()+ ' hai questi appuntamenti:\n';
                     for(var i=0; i<events.length; i++){
                         var start=new Date(events[i].start.dateTime).toDateString();
                         console.log('-----  prima start '+ start);
@@ -359,10 +338,19 @@ function callAVANEW(agent) {
                        console.log('strTemp ' + strTemp);
                      }
                 }   // fine if
-                agent.add(strTemp);
+                else{
+
+                    strTemp='Non ho trovato eventi per la data ' +new Date(dataRichiesta).toDateString();
+                }
+                var str=strOutput;
+                str=str.replace(/(@)/gi, strTemp);
+                strOutput=str;
+                agent.add(strOutput);
+                console.log('strOutput con replace '+ strOutput);
+                //agent.add(strTemp);
                 resolve(agent)
              }).catch((error) => {
-                console.log('Si è verificato errore : ' +error);
+                console.log('Si è verificato errore in listEvents: ' +error);
 
               });
             //listAppointment(agent);
@@ -463,10 +451,8 @@ function callAVANEW(agent) {
     if (events.length) {
       console.log('HO TROVATO EVENTI');
      
-      resolve(events);
-   
     } 
-    
+    resolve(events);
   }); 
 });
 }
