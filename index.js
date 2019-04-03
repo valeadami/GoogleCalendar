@@ -89,7 +89,7 @@ app.use(function (req, res, next) {
   //process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
   
   const timeZone = 'Europe/Rome';  // Change it to your time zone
-  const timeZoneOffset = '+01:00'; 
+  const timeZoneOffset = '+02:00'; 
   
  //PER TEST
 
