@@ -372,7 +372,14 @@ function callAVANEW(agent) {
           
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
-            var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
+           // var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
+            //adesso aggiungo qua un'ora a orarioApp
+            var pd=orarioApp.getHours()+1;
+            console.log('valore di pd aumentato di 1 ='+ pd);
+           
+            //orarioApp=orarioApp.setHours();
+
+            //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             console.log('*********dateTimeStart '+dateTimeStart);
             createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
                 console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
