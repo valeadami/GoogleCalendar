@@ -372,24 +372,9 @@ function callAVANEW(agent) {
           
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
-            console.log('Il tipo di orarioApp =' +typeof orarioApp); //è una stringa
-            var d=new Date('2019-04-04T09:00:00+02:00');
-            console.log('dopo new date d = '+d);
-            var pd=new Date(new Date(d).setHours(d.getHours() + 1))
-            console.log('sto porco de dio '+ pd);
-            console.log('Il tipo di pd =' +typeof pd);
-           // var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
-            //adesso aggiungo qua un'ora a orarioApp
-            /*var pd=new Date(orarioApp);
-
-            console.log('valore di pd ='+ pd);
-            var n= pd.getHours()+1;
-            console.log('n = '+n);*/
-           
-           
-           
-            //orarioApp=orarioApp.setHours();
-
+           // console.log('Il tipo di orarioApp =' +typeof orarioApp); //è una stringa
+            
+    
             //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             console.log('*********dateTimeStart '+dateTimeStart);
             createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
@@ -513,7 +498,7 @@ function callAVANEW(agent) {
 
 //creare un nuovo appuntamento
 //funzione per creare il mio appuntamento
-function createNewAppointment (agent) {
+/*function createNewAppointment (agent) {
     // Use the Dialogflow's date and time parameters to create Javascript Date instances, 'dateTimeStart' and 'dateTimeEnd',
     // which are used to specify the appointment's time.
     const appointmentDuration = 1;// Define the length of the appointment to be one hour.
@@ -529,19 +514,25 @@ function createNewAppointment (agent) {
       agent.add(`Mi dispiace, sei già occupato in data ${appointmentDateString} alle ore ${appointmentTimeString}. Che cosa posso fare ora?`);
     });
   }
-
+*/
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
 
-        const appointmentDuration = 1;// Define the length of the appointment to be one hour.
+        const appointmentDuration = 3;// Define the length of the appointment to be one hour.
       //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
-        const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
+      var d=new Date(dateTimeEnd);
+      console.log('dopo new date d = '+d);
+      var pd=new Date(new Date(d).setHours(d.getHours() + appointmentDuration))
+      console.log('*************** termine appuntamento ora*** '+ pd);
+      
+      
+      //const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
        
       calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
         timeMin: dateTimeStart.toISOString(),
-        timeMax: dateTimeEnd.toISOString()
+        timeMax: pd.toISOString()//dateTimeEnd.toISOString()
       }, (err, calendarResponse) => {
         // Check if there exists any event on the calendar given the specified the time period
         if (err || calendarResponse.data.items.length > 0) {
@@ -552,7 +543,7 @@ function createNewAppointment (agent) {
             calendarId: calendarId,
             resource: {summary: titleSummary,
               start: {dateTime: dateTimeStart},
-              end: {dateTime: dateTimeEnd}}
+              end: {dateTime: pd}}//dateTimeEnd
           }, (err, event) => {
             err ? reject(err) : resolve(event);
           }
