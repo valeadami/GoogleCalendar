@@ -372,7 +372,12 @@ function callAVANEW(agent) {
           
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
-            console.log('Il tipo di orarioApp =' +typeof orarioApp);
+            console.log('Il tipo di orarioApp =' +typeof orarioApp); //è una stringa
+            var d=new Date(orarioApp);
+            console.log('dopo new date d = '+d);
+            var pd=new Date(new Date(d).setHours(d.getHours() + 1))
+            console.log('sto porco de dio '+ pd);
+            console.log('Il tipo di pd =' +typeof pd);
            // var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
             //adesso aggiungo qua un'ora a orarioApp
             /*var pd=new Date(orarioApp);
@@ -380,8 +385,8 @@ function callAVANEW(agent) {
             console.log('valore di pd ='+ pd);
             var n= pd.getHours()+1;
             console.log('n = '+n);*/
-            var pdio=new Date(orarioApp.setHours(orarioApp.getHours()+1));
-            console.log('sto porco de dio '+ pdio);
+           
+           
            
             //orarioApp=orarioApp.setHours();
 
