@@ -374,11 +374,12 @@ function callAVANEW(agent) {
             var titolo=utf8.encode(titoloApp);
            // var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
             //adesso aggiungo qua un'ora a orarioApp
-            var pd=new Date(orarioApp);
+            /*var pd=new Date(orarioApp);
+
             console.log('valore di pd ='+ pd);
             var n= pd.getHours()+1;
-            console.log('n = '+n);
-            var pdio=new Date(pd.setHours(pd.getHours()+1));
+            console.log('n = '+n);*/
+            var pdio=new Date(orarioApp.setHours(orarioApp.getHours()+1));
             console.log('sto porco de dio '+ pdio);
            
             //orarioApp=orarioApp.setHours();
