@@ -51,6 +51,7 @@ app.use(function (req, res, next) {
     fixedKey=fixedKey.replace(new RegExp("\\\\n", "\g"), "\n");
     console.log('DOPO REPLACE DE sto cazzo de fixedKey '+ fixedKey);
     req.session.private_key= fixedKey;
+    console.log('CALENDARIO DI NOME '+calendarId);
   
     
    
