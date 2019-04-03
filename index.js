@@ -355,7 +355,7 @@ function callAVANEW(agent) {
                         start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
                         console.log('-----  DOPO start '+ start);
                        
-                       strTemp+= events[i].summary +' alle ore ' + start +'\n';
+                       strTemp+= events[i].summary +' alle ore ' + (new Date(events[i].start.dateTime)).toLocaleTimeString() +'\n';
                        console.log('strTemp ' + strTemp);
                      }
                 }   // fine if
