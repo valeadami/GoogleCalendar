@@ -400,7 +400,7 @@ function callAVANEW(agent) {
     console.log('la data di inizio è ' + pd + ', fine è ' + fine);
   
 
-    return listEvents(pd).then((events) => {
+      listEvents(pd).then((events) => {
       console.log('sono in listEvents');
         var strTemp='';
    
@@ -418,12 +418,10 @@ function callAVANEW(agent) {
           agent.add('Non hai eventi per questa data ' + (new Date(pd)).toDateString());
           resolve(agent);
         }
-    
-  
-    }).catch((error) => {
-      agent.add('PD: qualcosa è andato storto '+error);
-      resolve(agent);
-    });
+  }); 
+}).catch((error) => {
+    agent.add('PD: qualcosa è andato storto '+error);
+    resolve(agent);
   });
 }
   function listEvents(paramDate) {
@@ -455,15 +453,16 @@ function callAVANEW(agent) {
             console.log('DATA TROVATA');*/
         
       });
-      resolve(events);
+      
     } else {
       console.log('Non ci sono appuntamenti nel futuro.');
       //resolve('No upcoming events found');
     }
     //risolvo events, caricati o meno
-     
-  });
- 
+    
+  }); //
+
+  resolve(events); //fine promise??
 });
 }
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
