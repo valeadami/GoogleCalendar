@@ -162,7 +162,7 @@ app.get('/testSessione', function(req, res, next) {
     }
     if (req.body.queryResult.parameters.time){
         agent.parameters['time']=req.body.queryResult.parameters.time;
-        console.log('orario del evento da creare ' + req.body.queryResult.parameters.time);
+        console.log('**************orario del evento da creare ' + req.body.queryResult.parameters.time);
     }
    console.log('la data = '+req.body.queryResult.parameters.date);
 
@@ -373,7 +373,7 @@ function callAVANEW(agent) {
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
             console.log('Il tipo di orarioApp =' +typeof orarioApp); //è una stringa
-            var d=new Date(orarioApp);
+            var d=new Date('2019-04-04T09:00:00+02:00');
             console.log('dopo new date d = '+d);
             var pd=new Date(new Date(d).setHours(d.getHours() + 1))
             console.log('sto porco de dio '+ pd);
