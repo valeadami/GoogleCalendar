@@ -343,11 +343,26 @@ function callAVANEW(agent) {
             console.log('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
            /* agent.add('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
             resolve(agent);*/
-            listAppointment(agent);
+            var strTemp='';
+            listEvents(dataRichiesta).then((events)=>{
+                if (Array.isArray(events)){
+                    strTemp='Il giorno  '+dataRichiesta + ' hai questi appuntamenti:\n';
+                    for(var i=0; i<events.length; i++){
+                        var start=new Date(events[i].start.dateTime).toDateString();
+                        start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+                      
+                       strTemp+= events[i].summary +'\n';
+                       console.log('strTemp ' + strTemp);
+                     }
+                }   // fine if
+                agent.add(strTemp);
+                resolve(agent)
+             }).catch((error) => {
+                console.log('Si è verificato errore : ' +error);
+
+              });
+            //listAppointment(agent);
             break;
-          
-          
-          
         
           //28/01/2019 AGGIUNTO ANCHE LO STOP
           case 'STOP':
@@ -442,27 +457,13 @@ function callAVANEW(agent) {
     if (err) return console.log('The API returned an error da listEvent: ' + err);
      events = res.data.items;
     if (events.length) {
-      //console.log('Upcoming 10 events:');
-      events.map((event, i) => {
-        var start = event.start.dateTime || event.start.date;
-       
-        console.log(`${start} - ${event.summary}`);
-        start=new Date(start).toDateString();
-        console.log('start ora : ' + start);
-        /*if(start===paramDate)
-            console.log('DATA TROVATA');*/
-        
-      });
-      
-    } else {
-      console.log('Non ci sono appuntamenti nel futuro.');
-      //resolve('No upcoming events found');
-    }
-    //risolvo events, caricati o meno
+      console.log('HO TROVATO EVENTI');
+     
+      resolve(events);
+   
+    } 
     
-  }); //
-
-  resolve(events); //fine promise??
+  }); 
 });
 }
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
