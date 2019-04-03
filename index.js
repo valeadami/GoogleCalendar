@@ -323,7 +323,7 @@ function callAVANEW(agent) {
     var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
     //03/04/2019 per inserimento appuntamento
     var titoloApp=agent.parameters.any;
-    var orarioApp=agent.parameters.time;
+    var orarioApp=new Date(agent.parameters.time);
     console.log('strOutput agente prima di EsseTre :' + strOutput);
    
     
@@ -368,7 +368,7 @@ function callAVANEW(agent) {
             break;
         //03/04/2019
             case 'creaAppuntamento':
-            console.log('sono nel creaAppuntamento con data richiesta '+ dataRichiesta + 'titolo '+ titoloApp + 'e con orario '+orarioApp);
+            console.log('sono nel creaAppuntamento con data richiesta '+ dataRichiesta + ', titolo '+ titoloApp + ' e con orario '+orarioApp);
           
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
