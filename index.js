@@ -422,7 +422,7 @@ function callAVANEW(agent) {
   
     }).catch(() => {
       agent.add('PD: qualcosa è andato storto');
-      //resolve(agent);
+      resolve(agent);
     });
 }
   function listEvents(paramDate) {
