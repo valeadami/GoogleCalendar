@@ -520,6 +520,8 @@ function callAVANEW(agent) {
 
         const appointmentDuration = 3;// Define the length of the appointment to be one hour.
       //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
+      var dinizio=new Date(dateTimeStart);
+      console.log('dopo new date dinizio = '+dinizio);
       var d=new Date(dateTimeEnd);
       console.log('dopo new date d = '+d);
       var pd=new Date(new Date(d).setHours(d.getHours() + appointmentDuration))
@@ -531,7 +533,7 @@ function callAVANEW(agent) {
       calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
-        timeMin: dateTimeStart.toISOString(),
+        timeMin: dinizio.toISOString(), //dateTimeStart
         timeMax: pd.toISOString()//dateTimeEnd.toISOString()
       }, (err, calendarResponse) => {
         // Check if there exists any event on the calendar given the specified the time period
@@ -542,7 +544,7 @@ function callAVANEW(agent) {
           calendar.events.insert({ auth: serviceAccountAuth,
             calendarId: calendarId,
             resource: {summary: titleSummary,
-              start: {dateTime: dateTimeStart},
+              start: {dateTime: dinizio}, //dateTimeStart
               end: {dateTime: pd}}//dateTimeEnd
           }, (err, event) => {
             err ? reject(err) : resolve(event);
