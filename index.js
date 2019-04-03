@@ -392,7 +392,7 @@ function callAVANEW(agent) {
 /*************  */
  //funzione mia
  function listAppointment (agent) {
- 
+    return new Promise((resolve, reject) => {
      var pd=convertParametersDateMia(agent.parameters.date,true);
      var fine=convertParametersDateMia(agent.parameters.date,false);
    
@@ -416,14 +416,15 @@ function callAVANEW(agent) {
           resolve(agent);
         }else{
           agent.add('Non hai eventi per questa data ' + (new Date(pd)).toDateString());
-          //resolve(agent);
+          resolve(agent);
         }
-     
+    
   
     }).catch(() => {
       agent.add('PD: qualcosa è andato storto');
       resolve(agent);
     });
+  });
 }
   function listEvents(paramDate) {
     return new Promise((resolve, reject) => {
