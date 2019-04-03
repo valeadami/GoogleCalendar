@@ -378,7 +378,7 @@ function callAVANEW(agent) {
             //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             //console.log('*********dateTimeStart '+dateTimeStart);
             createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
-                console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
+                console.log('ho inserito appuntamento in calendario con id ' +event.id);
 
                 strTemp= event.eventId;
                 var str=strOutput;
