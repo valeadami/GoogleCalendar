@@ -155,6 +155,15 @@ app.get('/testSessione', function(req, res, next) {
     agent.parameters['Command']=req.body.queryResult.parameters.Command;
     //recupero la data
     agent.parameters['date']=req.body.queryResult.parameters.date;
+    //03/04/2019
+    if (req.body.queryResult.parameters.any){
+        agent.parameters['any']=req.body.queryResult.parameters.any;
+        console.log('titolo del evento da creare ' + req.body.queryResult.parameters.any);
+    }
+    if (req.body.queryResult.parameters.time){
+        agent.parameters['time']=req.body.queryResult.parameters.time;
+        console.log('orario del evento da creare ' + req.body.queryResult.parameters.time);
+    }
    console.log('la data = '+req.body.queryResult.parameters.date);
 
     //fulfillment text
@@ -312,6 +321,9 @@ function callAVANEW(agent) {
     }  
     var dataRichiesta=agent.parameters.date;
     var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
+    //03/04/2019 per inserimento appuntamento
+    var titoloApp=agent.parameters.any;
+    var orarioApp=agent.parameters.time;
     console.log('strOutput agente prima di EsseTre :' + strOutput);
    
     
@@ -319,8 +331,7 @@ function callAVANEW(agent) {
       switch (strRicerca) {
         case 'getAppuntamenti':
             console.log('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
-           /* agent.add('sono nel getAppuntamenti con data richiesta '+ dataRichiesta);
-            resolve(agent);*/
+          
             var strTemp='';
             listEvents(dataRichiesta).then((events)=>{
                 //if (Array.isArray(events)){
@@ -348,14 +359,36 @@ function callAVANEW(agent) {
                 agent.add(strOutput);
                 console.log('strOutput con replace '+ strOutput);
                 //agent.add(strTemp);
-                resolve(agent)
+                resolve(agent);
              }).catch((error) => {
                 console.log('Si è verificato errore in listEvents: ' +error);
 
               });
             //listAppointment(agent);
             break;
-        
+        //03/04/2019
+            case 'creaAppuntamento':
+            console.log('sono nel creaAppuntamento con data richiesta '+ dataRichiesta + 'titolo '+ titoloApp + 'e con orario '+orarioApp);
+          
+            var strTemp='';
+            var titolo=utf8.encode(titoloApp);
+            createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
+                console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
+
+                strTemp= event.eventId;
+                var str=strOutput;
+                str=str.replace(/(@)/gi, strTemp);
+                strOutput=str;
+                agent.add(strOutput);
+                console.log('strOutput con replace '+ strOutput);
+            
+                resolve(agent);
+
+            }).catch((error) => {
+                console.log('Si è verificato errore in creaAppuntamento: ' +error);
+
+            });
+            break;
           //28/01/2019 AGGIUNTO ANCHE LO STOP
           case 'STOP':
           if (agent.requestSource=="ACTIONS_ON_GOOGLE"){
@@ -398,6 +431,7 @@ function callAVANEW(agent) {
 } 
 /*************  */
  //funzione mia
+ /*
  function listAppointment (agent) {
     return new Promise((resolve, reject) => {
      var pd=convertParametersDateMia(agent.parameters.date,true);
@@ -430,7 +464,7 @@ function callAVANEW(agent) {
     agent.add('PD: qualcosa è andato storto '+error);
     resolve(agent);
   });
-}
+}*/
   function listEvents(paramDate) {
     return new Promise((resolve, reject) => {
      var pd=convertParametersDateMia(paramDate,true);
@@ -456,6 +490,58 @@ function callAVANEW(agent) {
   }); 
 });
 }
+
+//creare un nuovo appuntamento
+//funzione per creare il mio appuntamento
+function createNewAppointment (agent) {
+    // Use the Dialogflow's date and time parameters to create Javascript Date instances, 'dateTimeStart' and 'dateTimeEnd',
+    // which are used to specify the appointment's time.
+    const appointmentDuration = 1;// Define the length of the appointment to be one hour.
+    const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
+    const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
+    const appointmentTimeString = getLocaleTimeString(dateTimeStart);
+    const appointmentDateString = getLocaleDateString(dateTimeStart);
+    const title=agent.parameters.any;
+    // Check the availability of the time slot and set up an appointment if the time slot is available on the calendar
+    return createAppointment(dateTimeStart, dateTimeEnd,title).then(() => {
+      agent.add(`OK. Salvato evento in data ${appointmentDateString} alle ore ${appointmentTimeString} con il titolo ${title}.`);
+    }).catch(() => {
+      agent.add(`Mi dispiace, sei già occupato in data ${appointmentDateString} alle ore ${appointmentTimeString}. Che cosa posso fare ora?`);
+    });
+  }
+
+  function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
+    return new Promise((resolve, reject) => {
+
+        const appointmentDuration = 1;// Define the length of the appointment to be one hour.
+        const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
+        const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
+       
+      calendar.events.list({  // List all events in the specified time period
+        auth: serviceAccountAuth,
+        calendarId: calendarId,
+        timeMin: dateTimeStart.toISOString(),
+        timeMax: dateTimeEnd.toISOString()
+      }, (err, calendarResponse) => {
+        // Check if there exists any event on the calendar given the specified the time period
+        if (err || calendarResponse.data.items.length > 0) {
+          reject(err || new Error('Orario già occupato da un altro evento'));
+        } else {
+          // Create an event for the requested time period
+          calendar.events.insert({ auth: serviceAccountAuth,
+            calendarId: calendarId,
+            resource: {summary: titleSummary,
+              start: {dateTime: dateTimeStart},
+              end: {dateTime: dateTimeEnd}}
+          }, (err, event) => {
+            err ? reject(err) : resolve(event);
+          }
+          );
+        }
+      });
+    });
+  }
+  
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
 function addHours(dateObj, hoursToAdd){
     return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
