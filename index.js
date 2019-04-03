@@ -374,7 +374,7 @@ function callAVANEW(agent) {
             var titolo=utf8.encode(titoloApp);
            // var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
             //adesso aggiungo qua un'ora a orarioApp
-            var pd=orarioApp.getHours()+1;
+            var pd=new Date(orarioApp.getHours()+1);
             console.log('valore di pd aumentato di 1 ='+ pd);
            
             //orarioApp=orarioApp.setHours();
