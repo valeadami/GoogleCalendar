@@ -372,6 +372,7 @@ function callAVANEW(agent) {
           
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
+            console.log('Il tipo di orarioApp =' +typeof orarioApp);
            // var dateTimeStart=convertParametersDate(dataRichiesta, orarioApp);
             //adesso aggiungo qua un'ora a orarioApp
             /*var pd=new Date(orarioApp);
