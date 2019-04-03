@@ -420,8 +420,8 @@ function callAVANEW(agent) {
         }
     
   
-    }).catch(() => {
-      agent.add('PD: qualcosa è andato storto');
+    }).catch((error) => {
+      agent.add('PD: qualcosa è andato storto '+error);
       resolve(agent);
     });
   });
@@ -430,6 +430,7 @@ function callAVANEW(agent) {
     return new Promise((resolve, reject) => {
      var pd=convertParametersDateMia(paramDate,true);
      var fine=convertParametersDateMia(paramDate,false);
+     var events=[];
        console.log('////////////////la data di inizio è ' + pd + ', fine è ' + fine);
   calendar.events.list({
     auth: serviceAccountAuth,
@@ -441,7 +442,7 @@ function callAVANEW(agent) {
     orderBy: 'startTime',
   }, (err, res) => {
     if (err) return console.log('The API returned an error da listEvent: ' + err);
-    const events = res.data.items;
+     events = res.data.items;
     if (events.length) {
       //console.log('Upcoming 10 events:');
       events.map((event, i) => {
@@ -460,8 +461,9 @@ function callAVANEW(agent) {
       //resolve('No upcoming events found');
     }
     //risolvo events, caricati o meno
-     resolve(events);
+     
   });
+  resolve(events);
 });
 }
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
