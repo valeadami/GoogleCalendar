@@ -383,15 +383,15 @@ function callAVANEW(agent) {
         //03/04/2019
             case 'creaAppuntamento':
             console.log('sono nel creaAppuntamento con data richiesta '+ dataRichiesta + ', titolo '+ titoloApp + ' e con orario '+orarioApp);
-          
+           //data richiesta  2019-04-05T12:00:00+02:00, titolo Marco e con orario 2019-04-05T09:00:00+02:00
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
            // console.log('Il tipo di orarioApp =' +typeof orarioApp); //è una stringa
-            
+           
     
             //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             //console.log('*********dateTimeStart '+dateTimeStart);
-            createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
+            createAppointment(orarioApp,orarioApp,titolo).then((event)=>{
                 console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
 
                 strTemp= event.eventId;
@@ -533,7 +533,7 @@ function callAVANEW(agent) {
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
         console.log('in createAppointment il valore di dateTimeStart '+dateTimeStart);
-        const appointmentDuration = 3;// Define the length of the appointment to be one hour.
+        const appointmentDuration = 1;// Define the length of the appointment to be one hour.
       //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
       
 
@@ -542,7 +542,7 @@ function callAVANEW(agent) {
       console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
       nuovaData=addHours(nuovaData,appointmentDuration);
      
-      console.log('ho aggiunto 3 ore in nuovadata ' + nuovaData);
+      console.log('ho aggiunto 1 ora in nuovadata ' + nuovaData);
       //nuovaData=nuovaData.toISOString();
       //console.log('dopo ISOString '+nuovaData);
       /*calendar.events.list({  // List all events in the specified time period
@@ -559,8 +559,8 @@ function callAVANEW(agent) {
           calendar.events.insert({ auth: serviceAccountAuth,
             calendarId: calendarId,
             resource: {summary: titleSummary,
-              start: {dateTime: dateTimeStart}, //dateTimeStart
-              end: {dateTime:  '2019-04-05T15:00:00+02:00'}}//dateTimeEnd nuovaData ->2019-04-05T10:00:00.000Z
+              start: {dateTime: orarioApp}, //dateTimeStart
+              end: {dateTime:  nuovaData}}//dateTimeEnd nuovaData ->2019-04-05T10:00:00.000Z
           }, (err, event) => {
             err ? reject(err) : resolve(event);
           }
