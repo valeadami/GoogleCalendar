@@ -97,8 +97,15 @@ app.use(function (req, res, next) {
     app.get('/', function(req, res, next) {
       
        // res.send('ok')
-        res.send('<p>chiave: ' + req.session.private_key + ', email ' +req.session.client_email +'</p>');
-       
+        //res.send('<p>chiave: ' + req.session.private_key + ', email ' +req.session.client_email +'</p>');
+  
+        var date =	'2019-04-04T12:00:00+02:00';
+        var time = 	'2019-04-04T16:00:00+02:00';
+        var timeZone='Europe/Rome';
+        var timeZoneOffset='+02:00';
+        var nuovaData=convertParametersDate(date,time);
+        //nuovaData=nuovaData.toISOString();
+       res.send('<p>nuova data ' + nuovaData +', e con oISOString' + nuovaData.toISOString()+'</p>');
      });
     app.get('/testLocale', function(req, res, next) {
       
@@ -378,7 +385,7 @@ function callAVANEW(agent) {
             //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             //console.log('*********dateTimeStart '+dateTimeStart);
             createAppointment(dataRichiesta,orarioApp,titolo).then((event)=>{
-                console.log('ho inserito appuntamento in calendario con id ' +event.id);
+                console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
 
                 strTemp= event.eventId;
                 var str=strOutput;
@@ -434,6 +441,7 @@ function callAVANEW(agent) {
   // });
   
 } 
+
 /*************  */
  //funzione mia
  /*
@@ -518,7 +526,7 @@ function callAVANEW(agent) {
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
 
-        const appointmentDuration = 1;// Define the length of the appointment to be one hour.
+        const appointmentDuration = 3;// Define the length of the appointment to be one hour.
       //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
       var dinizio=new Date(dateTimeStart);
 
