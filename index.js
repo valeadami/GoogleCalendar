@@ -560,7 +560,7 @@ function callAVANEW(agent) {
             calendarId: calendarId,
             resource: {summary: titleSummary,
               start: {dateTime: '2019-04-05T12:00:00+02:00'}, //dateTimeStart
-              end: {dateTime: '2019-04-05T13:00:00+02:00'}}//dateTimeEnd nuovaData
+              end: {dateTime: nuovaData}}//dateTimeEnd nuovaData ->2019-04-05T10:00:00.000Z
           }, (err, event) => {
             err ? reject(err) : resolve(event);
           }
