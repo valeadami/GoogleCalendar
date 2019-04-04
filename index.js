@@ -557,8 +557,8 @@ function callAVANEW(agent) {
           calendar.events.insert({ auth: serviceAccountAuth,
             calendarId: calendarId,
             resource: {summary: titleSummary,
-              start: {dateTime: dateTimeStart}, //dateTimeStart
-              end: {dateTime: nuovaData}}//dateTimeEnd
+              start: {dateTime: '2019-04-05T12:00:00+02:00'}, //dateTimeStart
+              end: {dateTime: '2019-04-05T13:00:00+02:00'}}//dateTimeEnd nuovaData
           }, (err, event) => {
             err ? reject(err) : resolve(event);
           }
