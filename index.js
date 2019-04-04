@@ -542,9 +542,9 @@ function callAVANEW(agent) {
       console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
       nuovaData=addHours(nuovaData,appointmentDuration);
      
-      console.log('ho aggiunto 2 ore in nuovadata ' + nuovaData);
-      nuovaData=nuovaData.toISOString();
-      console.log('dopo ISOString '+nuovaData);
+      console.log('ho aggiunto 3 ore in nuovadata ' + nuovaData);
+      //nuovaData=nuovaData.toISOString();
+      //console.log('dopo ISOString '+nuovaData);
       /*calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
