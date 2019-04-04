@@ -542,40 +542,30 @@ function callAVANEW(agent) {
       console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
       nuovaData=addHours(nuovaData,appointmentDuration);
       console.log('ho aggiunto 2 ore in nuovadata ' + nuovaData);
-     /* var dinizio=new Date(dateTimeStart);
-
-      console.log('dopo new date dinizio = '+dinizio);
-      var d=new Date(dateTimeEnd);
-      console.log('dopo new date d = '+d);
-      var pd=new Date(new Date(d).setHours(d.getHours() + appointmentDuration))
-      console.log('*************** termine appuntamento ora*** '+ pd);
-      
-      
-      //const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
-       */
-      calendar.events.list({  // List all events in the specified time period
+    
+      /*calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
         timeMin:  dateTimeStart,// dinizio,
         timeMax: nuovaData//dateTimeEnd.toISOString() .toISOString()
       }, (err, calendarResponse) => {
-        // Check if there exists any event on the calendar given the specified the time period
+       
         if (err || calendarResponse.data.items.length > 0) {
           reject(err || new Error('Orario già occupato da un altro evento'));
-        } else {
+        } else {*/
           // Create an event for the requested time period
           calendar.events.insert({ auth: serviceAccountAuth,
             calendarId: calendarId,
             resource: {summary: titleSummary,
-              start: {dateTime: dinizio}, //dateTimeStart
-              end: {dateTime: pd}}//dateTimeEnd
+              start: {dateTime: dateTimeStart}, //dateTimeStart
+              end: {dateTime: nuovaData}}//dateTimeEnd
           }, (err, event) => {
             err ? reject(err) : resolve(event);
           }
           );
-        }
+       // }
       });
-    });
+   // });
   }
   
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
