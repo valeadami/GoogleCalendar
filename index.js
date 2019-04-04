@@ -104,8 +104,9 @@ app.use(function (req, res, next) {
         var timeZone='Europe/Rome';
         var timeZoneOffset='+02:00';
         var nuovaData=convertParametersDate(date,time);
+        nuovaData=nuovaData.addHours(nuovaData,2);
         //nuovaData=nuovaData.toISOString();
-       res.send('<p>nuova data ' + nuovaData +', e con oISOString' + nuovaData.toISOString()+'</p>');
+       res.send('<p>nuova data ' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');
      });
     app.get('/testLocale', function(req, res, next) {
       
