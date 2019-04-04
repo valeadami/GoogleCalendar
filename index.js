@@ -579,7 +579,7 @@ function addHours(dateObj, hoursToAdd){
     return dateObj.toLocaleDateString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
   } 
   function convertParametersDate(date, time){
-      console.log('sto cazzo de date '+date + ' e sto cazzo de time ' + time);
+      console.log('sto cazzo de date '+date + ' e sto cazzo de time ' + time + ' con timeZoneOffset' +timeZoneOffset);
       var v=new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
       console.log('sto cazzo de convert '+v);
       return v;
