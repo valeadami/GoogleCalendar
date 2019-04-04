@@ -104,11 +104,11 @@ app.use(function (req, res, next) {
         var timeZone='Europe/Rome';
         var timeZoneOffset='+02:00';
         var nuovaData=convertParametersDate(date,time);
-        console.log('il tipo di nuovaData '+ typeof nuovaData);
-
-        //nuovaData=nuovaData.addHours(nuovaData,2);
-        //nuovaData=nuovaData.toISOString();
-       res.send('<p>nuova data ' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');
+        console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
+        nuovaData=addHours(nuovaData,2)
+       
+      
+       res.send('<p>nuova data con aggiunta di 2 ore' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');
      });
     app.get('/testLocale', function(req, res, next) {
       
