@@ -556,8 +556,8 @@ function callAVANEW(agent) {
       calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
-        timeMin:  dateTimeStart .toISOString(),// dinizio,
-        timeMax: nuovaData.toISOString()//dateTimeEnd.toISOString() .toISOString()
+        timeMin:  dateTimeStart,// dinizio,
+        timeMax: nuovaData//dateTimeEnd.toISOString() .toISOString()
       }, (err, calendarResponse) => {
         // Check if there exists any event on the calendar given the specified the time period
         if (err || calendarResponse.data.items.length > 0) {
