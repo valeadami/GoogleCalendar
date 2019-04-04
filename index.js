@@ -532,10 +532,17 @@ function callAVANEW(agent) {
 */
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
-
-        const appointmentDuration = 3;// Define the length of the appointment to be one hour.
+        console.log('in createAppointment il valore di dateTimeStart '+dateTimeStart);
+        const appointmentDuration = 1;// Define the length of the appointment to be one hour.
       //  const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
-      var dinizio=new Date(dateTimeStart);
+      
+
+
+      var nuovaData=convertParametersDate(dateTimeStart, dateTimeEnd);
+      console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
+      nuovaData=addHours(nuovaData,appointmentDuration);
+      console.log('ho aggiunto 2 ore in nuovadata ' + nuovaData);
+     /* var dinizio=new Date(dateTimeStart);
 
       console.log('dopo new date dinizio = '+dinizio);
       var d=new Date(dateTimeEnd);
@@ -545,12 +552,12 @@ function callAVANEW(agent) {
       
       
       //const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
-       
+       */
       calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
-        timeMin: dinizio, //dateTimeStart .toISOString()
-        timeMax: pd//dateTimeEnd.toISOString() .toISOString()
+        timeMin:  dateTimeStart .toISOString(),// dinizio,
+        timeMax: nuovaData.toISOString()//dateTimeEnd.toISOString() .toISOString()
       }, (err, calendarResponse) => {
         // Check if there exists any event on the calendar given the specified the time period
         if (err || calendarResponse.data.items.length > 0) {
