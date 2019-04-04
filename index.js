@@ -104,7 +104,9 @@ app.use(function (req, res, next) {
         var timeZone='Europe/Rome';
         var timeZoneOffset='+02:00';
         var nuovaData=convertParametersDate(date,time);
-        nuovaData=nuovaData.addHours(nuovaData,2);
+        console.log('il tipo di nuovaData '+ typeof nuovaData);
+
+        //nuovaData=nuovaData.addHours(nuovaData,2);
         //nuovaData=nuovaData.toISOString();
        res.send('<p>nuova data ' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');
      });
@@ -566,9 +568,9 @@ function callAVANEW(agent) {
   }
   
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
-function addHours(dateObj, hoursToAdd){
+function addHours(dateObj, hoursToAdd) {
     return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
-  }
+ }
   
   // A helper function that converts the Date instance 'dateObj' into a string that represents this time in English.
   function getLocaleTimeString(dateObj){
