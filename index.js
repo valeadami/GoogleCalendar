@@ -106,7 +106,11 @@ app.use(function (req, res, next) {
         var nuovaData=convertParametersDate(date,time);
         console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
         nuovaData=addHours(nuovaData,2)
-       
+        var options={
+            weekday: 'long', month: 'long', day: 'numeric', timeZone: timeZone 
+        }
+        var nd2=nuovaData.toLocaleDateString('it-IT',options); // 2019-4-5 16:00:00 toLocaleString()
+        console.log('valore di nd2 '+nd2);
       
        res.send('<p>nuova data con aggiunta di 2 ore' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');
      });
