@@ -341,6 +341,7 @@ function callAVANEW(agent) {
     let sessionId = agent.sessionId /*.split('/').pop()*/;
     console.log('dentro call ava il mio session id '+sessionId);
 //questo lo tengo perchè mi serve per recuperare parametro comando proveniente dall'agente
+
     var str= utf8.encode(agent.parameters.Command); 
     if (str) {
       strRicerca=querystring.escape(str); //lo tengo comunque
@@ -348,25 +349,33 @@ function callAVANEW(agent) {
     
       console.log('il comando da passare : '+ strRicerca);
     }  
-    //DATA RICHIESTA: PARAM PER ELENCARE EVENTI E PER INSERIRE LA DATA DI INSERIMENTO APPUNTAMENTO
-    //IN CASO DI INSERT, MI INTERESSA SOLOA LA PRIMA PARTE 	2019-04-08T15:43:45+02:00
-    //FINO AL PRIMO T
-    var dataRichiesta=agent.parameters.date;
-    var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
-    //03/04/2019 per inserimento appuntamento
-    var titoloApp=agent.parameters.any;
-    //QUANDO VIENE FISSATO APPUNTAMENTO ad esempio in formato 	2019-04-06T13:00:00+02:00
-    // mi interessa solo la parte dopo il T 
-    var dateTimeStart=agent.parameters.time; 
-    console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
+
+    var dataRichiesta='';
+    var strOutput='';
+    var titoloApp='';
+    var dateTimeStart='';
+    var dataDaEliminare ='';
     //05/04/2019 per eliminazione: recupero il contesto per avere la data richiesta 
     var ctx=agent.context.get('delappointment-followup');
-    var dataDaEliminare ='';
+    
     if (ctx){
         dataDaEliminare = ctx.parameters.date;
         console.log('in contesto delappointment-followup elimino eventi in data '+dataDaEliminare);
 
-    }
+    }else{ 
+    //DATA RICHIESTA: PARAM PER ELENCARE EVENTI E PER INSERIRE LA DATA DI INSERIMENTO APPUNTAMENTO
+    //IN CASO DI INSERT, MI INTERESSA SOLOA LA PRIMA PARTE 	2019-04-08T15:43:45+02:00
+    //FINO AL PRIMO T
+
+    dataRichiesta=agent.parameters.date;
+    strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
+    //03/04/2019 per inserimento appuntamento
+     titoloApp=agent.parameters.any;
+    //QUANDO VIENE FISSATO APPUNTAMENTO ad esempio in formato 	2019-04-06T13:00:00+02:00
+    // mi interessa solo la parte dopo il T 
+     dateTimeStart=agent.parameters.time; 
+    console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
+}
     
     //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
       switch (strRicerca) {
