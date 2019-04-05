@@ -714,7 +714,7 @@ function addHours(dateObj, hoursToAdd) {
   
   // A helper function that converts the Date instance 'dateObj' into a string that represents this time in English.
   function getLocaleTimeString(dateObj){
-    return dateObj.toLocaleTimeString('it-IT', { hour: 'numeric', hour12: true, timeZone: timeZone });
+    return dateObj.toLocaleTimeString('it-IT', { hour: 'numeric', hour12: false, timeZone: timeZone });
   }
   
   // A helper function that converts the Date instance 'dateObj' into a string that represents this date in English.
