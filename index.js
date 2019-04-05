@@ -380,7 +380,8 @@ function callAVANEW(agent) {
                 if (events.length){
                    // strTemp='Il giorno  '+ new Date(dataRichiesta).toDateString()+ ' hai questi appuntamenti:\n';
                     for(var i=0; i<events.length; i++){
-                        var start=new Date(events[i].start.dateTime).toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+                        var start=getLocaleDateString(new Date(events[i].start.dateTime));
+                        //.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
                        //.toDateString();
                         console.log('-----  con toLocaleString '+ start);
                        
