@@ -550,17 +550,17 @@ function callAVANEW(agent) {
      
       console.log('ho aggiunto 1 ora in nuovadata quindi termina il ' + termine);
       //nuovaData=nuovaData.toISOString();
-      //console.log('dopo ISOString '+nuovaData);
-      /*calendar.events.list({  // List all events in the specified time period
+      //abilito il check se slot già occupato;
+      calendar.events.list({  // List all events in the specified time period
         auth: serviceAccountAuth,
         calendarId: calendarId,
-        timeMin:  dateTimeStart,// dinizio,
-        timeMax: nuovaData//dateTimeEnd.toISOString() .toISOString()
+        timeMin:  nuovaData.toISOString(),// dinizio,
+        timeMax: termine.toISOString()//dateTimeEnd.toISOString() .toISOString()
       }, (err, calendarResponse) => {
        
         if (err || calendarResponse.data.items.length > 0) {
           reject(err || new Error('Orario già occupato da un altro evento'));
-        } else {*/
+        } else { //era commentato fino a qua
           // Create an event for the requested time period
           calendar.events.insert({ auth: serviceAccountAuth,
             calendarId: calendarId,
