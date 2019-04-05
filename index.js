@@ -571,9 +571,9 @@ function callAVANEW(agent) {
             err ? reject(err) : resolve(event);
           }
           );
-       // }
+       }
       });
-   // });
+    });
   }
   
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
