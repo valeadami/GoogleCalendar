@@ -410,7 +410,8 @@ function callAVANEW(agent) {
 
             }).catch((error) => {
                 console.log('Si è verificato errore in creaAppuntamento: ' +error);
-
+                agent.add('Ops...' +error);
+                resolve(agent);
             });
             break;
           //28/01/2019 AGGIUNTO ANCHE LO STOP
