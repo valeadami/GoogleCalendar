@@ -384,7 +384,7 @@ function callAVANEW(agent) {
                         console.log('-----  prima start '+ start);
                        
 
-                        start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+                        start=start.toLocaleString('en-US', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
                         console.log('-----  DOPO start '+ start);
                        
                        strTemp+= events[i].summary +' alle ore ' + (new Date(events[i].start.dateTime)).toLocaleTimeString() +'\n';
