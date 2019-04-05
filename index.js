@@ -443,7 +443,7 @@ function callAVANEW(agent) {
             //la recupero dal contesto
             
             console.log('sono in deleteAppointment');
-               /* getEventsForDelete(dataDaEliminare).then((arIDs)=>{
+                getEventsForDelete(dataDaEliminare).then((arIDs)=>{
                     console.log('sono in getEventsForDelete con dataDaEliminare '+ dataDaEliminare);
                     //elimino effettivamente gli eventi tramite id
                     if (arIDs.length){
@@ -471,9 +471,9 @@ function callAVANEW(agent) {
                     console.log('Si è verificato errore in deleteAppointment: ' +error);
                     agent.add('Ops...' +error);
                     resolve(agent);
-                });*/
-                agent.add('Oporco dio' );
-                resolve(agent);
+                });
+               /* agent.add('pd' );
+                resolve(agent);*/
 
             break;
           //28/01/2019 AGGIUNTO ANCHE LO STOP
