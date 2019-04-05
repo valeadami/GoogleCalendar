@@ -417,8 +417,11 @@ function callAVANEW(agent) {
             //05/04/2019 eliminare evento
             case 'deleteAppointment':
             //recupero la lista degli eventi per la data richiesta
-                getEventsForDelete(dataRichiesta).then((arIDs)=>{
-                    console.log('sono in getEventsForDelete con dataRichiesta '+ dataRichiesta);
+            //la recupero dal contesto
+            var contesto =  agent.getContext('delappointment-followup');
+             var dateTimeStart = contesto.parameters.date;
+                getEventsForDelete(dateTimeStart).then((arIDs)=>{
+                    console.log('sono in getEventsForDelete con dateTimeStart '+ dateTimeStart);
                     //elimino effettivamente gli eventi tramite id
                     if (arIDs.length){
                         console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
