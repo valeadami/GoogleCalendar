@@ -165,10 +165,17 @@ app.get('/testSessione', function(req, res, next) {
     //recupero la sessionId della conversazione
     
     agent.sessionId=req.body.session.split('/').pop();
+    //console.info(` sessione agente ` + agent.sessionId +` con parametri` + agent.parameters.Command);
   //assegno all'agente il parametro di ricerca da invare sotto forma di searchText a Panloquacity
-    agent.parameters['Command']=req.body.queryResult.parameters.Command;
+    if (req.body.queryResult.parameters.Command){
+        agent.parameters['Command']=req.body.queryResult.parameters.Command;
+    }
     //recupero la data
-    agent.parameters['date']=req.body.queryResult.parameters.date;
+    if (eq.body.queryResult.parameters.date){
+        agent.parameters['date']=req.body.queryResult.parameters.date;
+        console.log('la data = '+req.body.queryResult.parameters.date);
+    }
+    
     //03/04/2019
     if (req.body.queryResult.parameters.any){
         agent.parameters['any']=req.body.queryResult.parameters.any;
@@ -178,12 +185,15 @@ app.get('/testSessione', function(req, res, next) {
         agent.parameters['time']=req.body.queryResult.parameters.time;
         console.log('**************orario del evento da creare ' + req.body.queryResult.parameters.time);
     }
-   console.log('la data = '+req.body.queryResult.parameters.date);
+ 
 
     //fulfillment text
-    agent.fulfillmentText=req.body.queryResult.fulfillmentText;
-    console.log('----> fulfillment text =' +agent.fulfillmentText);
-    console.info(` sessione agente ` + agent.sessionId +` con parametri` + agent.parameters.Command);
+    if (req.body.queryResult.fulfillmentText){
+        agent.fulfillmentText=req.body.queryResult.fulfillmentText;
+        console.log('----> fulfillment text =' +agent.fulfillmentText);
+    }
+
+    
   //20/03/2019 fallback su plq
     if (req.body.queryResult.parameters.searchText){
 
@@ -193,8 +203,12 @@ app.get('/testSessione', function(req, res, next) {
   
     //gestione degli intent
     //nuovo del 21/03/2019 fallback intent
-      var blnIsFallback=req.body.queryResult.intent.isFallback;
-      console.log('blnIsFallback ?? '+blnIsFallback);
+    var blnIsFallback=false;
+    if (req.body.queryResult.intent.isFallback){
+        blnIsFallback=req.body.queryResult.intent.isFallback;
+        console.log('blnIsFallback ?? '+blnIsFallback);
+    }
+ 
      
      //la funzione callAva sostiutisce la funzione welcome 
      // callAVA anytext AnyText sostituisce 'qualunquetesto'
