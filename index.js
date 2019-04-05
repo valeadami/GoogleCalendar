@@ -333,12 +333,17 @@ function callAVANEW(agent) {
     
       console.log('il comando da passare : '+ strRicerca);
     }  
+    //DATA RICHIESTA: PARAM PER ELENCARE EVENTI E PER INSERIRE LA DATA DI INSERIMENTO APPUNTAMENTO
+    //IN CASO DI INSERT, MI INTERESSA SOLOA LA PRIMA PARTE 	2019-04-08T15:43:45+02:00
+    //FINO AL PRIMO T
     var dataRichiesta=agent.parameters.date;
     var strOutput=agent.fulfillmentText; //è la risposta statica da DF messa da Roberto
     //03/04/2019 per inserimento appuntamento
     var titoloApp=agent.parameters.any;
-    var orarioApp=agent.parameters.time;
-    console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con orarioApp '+orarioApp);
+    //QUANDO VIENE FISSATO APPUNTAMENTO ad esempio in formato 	2019-04-06T13:00:00+02:00
+    // mi interessa solo la parte dopo il T 
+    var dateTimeStart=agent.parameters.time; 
+    console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
    
     
     //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
@@ -382,16 +387,16 @@ function callAVANEW(agent) {
             break;
         //03/04/2019
             case 'creaAppuntamento':
-            console.log('sono nel creaAppuntamento con data richiesta '+ dataRichiesta + ', titolo '+ titoloApp + ' e con orario '+orarioApp);
+            console.log('sono nel creaAppuntamento con data richiesta '+ dataRichiesta + ', titolo '+ titoloApp + ' e con dateTimeStart '+dateTimeStart);
            //data richiesta  2019-04-05T12:00:00+02:00, titolo Marco e con orario 2019-04-05T09:00:00+02:00
             var strTemp='';
             var titolo=utf8.encode(titoloApp);
-           // console.log('Il tipo di orarioApp =' +typeof orarioApp); //è una stringa
+           // console.log('Il tipo di dateTimeStart =' +typeof dateTimeStart); //è una stringa
            
     
             //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             //console.log('*********dateTimeStart '+dateTimeStart);
-            createAppointment(orarioApp,orarioApp,titolo).then((event)=>{
+            createAppointment(dataRichiesta,dateTimeStart,titolo).then((event)=>{
                 console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
 
                 strTemp= event.eventId;
@@ -530,6 +535,7 @@ function callAVANEW(agent) {
     });
   }
 */
+//dataRichiesta,dateTimeStart,titolo
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
         console.log('in createAppointment il valore di dateTimeStart '+dateTimeStart);
