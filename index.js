@@ -190,6 +190,7 @@ app.get('/testSessione', function(req, res, next) {
       console.log(' ho param searchText per PLQ =' + req.body.queryResult.parameters.searchText);
       agent.parameters['searchText']=req.body.queryResult.parameters.searchText;
     }
+  
     //gestione degli intent
     //nuovo del 21/03/2019 fallback intent
       var blnIsFallback=req.body.queryResult.intent.isFallback;
@@ -322,7 +323,7 @@ function callAVANEW(agent) {
     return new Promise((resolve, reject) => {
   
     let strRicerca='';
-   
+    
     let sessionId = agent.sessionId /*.split('/').pop()*/;
     console.log('dentro call ava il mio session id '+sessionId);
 //questo lo tengo perchè mi serve per recuperare parametro comando proveniente dall'agente
@@ -344,7 +345,14 @@ function callAVANEW(agent) {
     // mi interessa solo la parte dopo il T 
     var dateTimeStart=agent.parameters.time; 
     console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
-   
+    //05/04/2019 per eliminazione: recupero il contesto per avere la data richiesta 
+    var ctx=agent.context.get('delappointment-followup');
+    var dataDaEliminare ='';
+    if (ctx){
+        dataDaEliminare = ctx.parameters.date;
+        console.log('in contesto delappointment-followup elimino eventi in data '+dataDaEliminare);
+
+    }
     
     //IN BASE AL COMANDO ASSOCIATO ALL'INTENT ESEGUO AZIONE SU ESSETRE
       switch (strRicerca) {
@@ -418,10 +426,10 @@ function callAVANEW(agent) {
             case 'deleteAppointment':
             //recupero la lista degli eventi per la data richiesta
             //la recupero dal contesto
-            var contesto =  agent.getContext('delappointment-followup');
-             var dateTimeStart = contesto.parameters.date;
-                getEventsForDelete(dateTimeStart).then((arIDs)=>{
-                    console.log('sono in getEventsForDelete con dateTimeStart '+ dateTimeStart);
+            
+            console.log('sono in deleteAppointment con')
+                getEventsForDelete(dataDaEliminare).then((arIDs)=>{
+                    console.log('sono in getEventsForDelete con dataDaEliminare '+ dataDaEliminare);
                     //elimino effettivamente gli eventi tramite id
                     if (arIDs.length){
                         console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
