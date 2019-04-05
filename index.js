@@ -414,7 +414,42 @@ function callAVANEW(agent) {
                 resolve(agent);
             });
             break;
+            //05/04/2019 eliminare evento
+            case 'deleteAppointment':
+            //recupero la lista degli eventi per la data richiesta
+                getEventsForDelete(dataRichiesta).then((arIDs)=>{
+                    console.log('sono in getEventsForDelete con dataRichiesta '+ dataRichiesta);
+                    //elimino effettivamente gli eventi tramite id
+                    if (arIDs.length){
+                        console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
+                        for (var i=0;i<arIDs.length;i++){
+                          console.log('sto eliminando id evento : ' +arIDs[i]);
+                            calendar.events.delete({
+                            auth: serviceAccountAuth,
+                            calendarId: calendarId,
+                            eventId:arIDs[i]
+                            });
+                       
+                        }//chiudo for
+                    }//chiudo if
+
+                    else {
+                      console.log('arIDs non pervenuto ');
+                     
+                    }
+                    console.log('eliminazione avvenuta');
+                    agent.add('eliminazione avvenuta. Cosa vuoi fare ora?');
+                    resolve(agent);
+    
+                }).catch((error) => {
+                    console.log('Si è verificato errore in deleteAppointment: ' +error);
+                    agent.add('Ops...' +error);
+                    resolve(agent);
+                });
+
+            break;
           //28/01/2019 AGGIUNTO ANCHE LO STOP
+        
           case 'STOP':
           if (agent.requestSource=="ACTIONS_ON_GOOGLE"){
                   
@@ -576,7 +611,71 @@ function callAVANEW(agent) {
       });
     });
   }
-  
+  //05/04/2019 ELIMINARE EVENTO
+  //recupero id degli eventi per cancellarli quindi prima lst
+  //paramDate è dataRichiesta
+function getEventsForDelete(paramDate) {
+    return new Promise((resolve, reject) => {
+     var pd=convertParametersDateMia(paramDate,true);
+     var fine=convertParametersDateMia(paramDate,false);
+      var id=[]; //array per id
+       console.log('////////////////la data di inizio in getEventsForDelete è ' + pd + ', fine è ' + fine);
+  calendar.events.list({
+    auth: serviceAccountAuth,
+    calendarId: calendarId,
+    timeMin: pd, // paramDate proviene dai params (new Date()).toISOString(),
+    timeMax:fine,
+    maxResults: 10,
+    singleEvents: true,
+    orderBy: 'startTime',
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error da listEvent: ' + err);
+    const events = res.data.items;
+    if (events.length) {
+      //console.log('Upcoming 10 events:');
+      events.map((event, i) => {
+        id[i] = event.id;
+       
+       // console.log(`${id} - ${event.id}`);
+        console.log('----------- inserito in  id[i]= '+  id[i]);
+       
+        
+      });
+     
+    } else {
+      console.log('Non ci sono eventi in getEventsForDelete');
+      //resolve('No upcoming events found');
+    }
+    //risolvo events, caricati o meno
+     resolve(id);
+  });
+});
+}
+//funzione che elimina eventi
+function deleteEvents(arIDs) {
+    return new Promise((resolve, reject) => {
+   
+      if (arIDs.length){
+        console.log('sono in deleteEvents e arIDs.length = ' +arIDs.length);
+        for (var i=0;i<arIDs.length;i++){
+          console.log('sto eliminando id evento : ' +arIDs[i]);
+          calendar.events.delete({
+          auth: serviceAccountAuth,
+          calendarId: calendarId,
+          eventId:arIDs[i]
+		 });
+         resolve('OK eliminato gli appuntamenti!');
+       }  //chiudo for   
+       
+  }//chiudo if
+    else {
+      console.log('arIDs non pervenuto ');
+      resolve('NOK');
+    }
+});
+}
+//FINE ELIMINAZIONE
+/****************** */
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
 function addHours(dateObj, hoursToAdd) {
     return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
