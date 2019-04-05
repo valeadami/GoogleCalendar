@@ -171,7 +171,7 @@ app.get('/testSessione', function(req, res, next) {
         agent.parameters['Command']=req.body.queryResult.parameters.Command;
     }
     //recupero la data
-    if (eq.body.queryResult.parameters.date){
+    if (req.body.queryResult.parameters.date){
         agent.parameters['date']=req.body.queryResult.parameters.date;
         console.log('la data = '+req.body.queryResult.parameters.date);
     }
