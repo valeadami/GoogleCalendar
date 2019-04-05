@@ -380,14 +380,16 @@ function callAVANEW(agent) {
                 if (events.length){
                    // strTemp='Il giorno  '+ new Date(dataRichiesta).toDateString()+ ' hai questi appuntamenti:\n';
                     for(var i=0; i<events.length; i++){
-                        var start=new Date(events[i].start.dateTime).toDateString();
-                        console.log('-----  prima start '+ start);
+                        var start=new Date(events[i].start.dateTime).toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+                       //.toDateString();
+                        console.log('-----  con toLocaleString '+ start);
                        
 
-                        start=start.toLocaleString('en-US', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
-                        console.log('-----  DOPO start '+ start);
+                       /* start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
+                        console.log('-----  DOPO start '+ start);*/
                        
-                       strTemp+= events[i].summary +' alle ore ' + (new Date(events[i].start.dateTime)).toLocaleTimeString() +'\n';
+                    //   strTemp+= events[i].summary +' alle ore ' + (new Date(events[i].start.dateTime)).toLocaleTimeString() +'\n';
+                       strTemp+= events[i].summary +' alle ore ' + events[i].start.dateTime +'\n';
                        console.log('strTemp ' + strTemp);
                      }
                 }   // fine if
