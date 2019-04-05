@@ -388,7 +388,7 @@ function callAVANEW(agent) {
                        /* start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
                         console.log('-----  DOPO start '+ start);*/
                       // var tmp=addHours(new Date(events[i].start.dateTime),2); getLocaleTimeString
-                       console.log('------------------- tmp = '+tmp);
+                       //console.log('------------------- tmp = '+tmp);
                       // strTemp+= events[i].summary +' alle ore ' + (new Date(events[i].start.dateTime)).toLocaleTimeString()  +'\n';
                       strTemp+= events[i].summary +' alle ore ' + getLocaleTimeString(events[i].start.dateTime)  +'\n';
                        console.log('strTemp ' + strTemp);
