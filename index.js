@@ -419,7 +419,7 @@ function callAVANEW(agent) {
             createAppointment(dataRichiesta,dateTimeStart,titolo).then((event)=>{
                 console.log('ho inserito appuntamento in calendario con id ' +event.data.id); // -> da event.eventId a event.id o event.data.id
 
-                strTemp= event.eventId;
+                strTemp= event.data.id;
                 var str=strOutput;
                 str=str.replace(/(@)/gi, strTemp);
                 strOutput=str;
