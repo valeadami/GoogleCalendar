@@ -381,23 +381,16 @@ function callAVANEW(agent) {
                    // strTemp='Il giorno  '+ new Date(dataRichiesta).toDateString()+ ' hai questi appuntamenti:\n';
                     for(var i=0; i<events.length; i++){
                         var start=getLocaleDateString(new Date(events[i].start.dateTime));
-                        //.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
-                       //.toDateString();
+                      
                         console.log('-----  con toLocaleString '+ start);
                        
-
-                       /* start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
-                        console.log('-----  DOPO start '+ start);*/
-                      // var tmp=addHours(new Date(events[i].start.dateTime),2); getLocaleTimeString
-                       //console.log('------------------- tmp = '+tmp);
-                      // strTemp+= events[i].summary +' alle ore ' + (new Date(events[i].start.dateTime)).toLocaleTimeString()  +'\n';
-                      strTemp+= events[i].summary +' alle ore ' + getLocaleTimeString(new Date(events[i].start.dateTime))  +'\n';
+                       strTemp+= events[i].summary +' alle ore ' + getLocaleTimeString(new Date(events[i].start.dateTime))  +'\n';
                        console.log('strTemp ' + strTemp);
                      }
                 }   // fine if
                 else{
 
-                    strTemp='Non ho trovato eventi per la data ' +new Date(dataRichiesta).toDateString();
+                strTemp='Non ho trovato eventi per la data ' +new Date(dataRichiesta.toDateString());
                 }
                 var str=strOutput;
                 str=str.replace(/(@)/gi, strTemp);
@@ -424,7 +417,7 @@ function callAVANEW(agent) {
             //return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
             //console.log('*********dateTimeStart '+dateTimeStart);
             createAppointment(dataRichiesta,dateTimeStart,titolo).then((event)=>{
-                console.log('ho inserito appuntamento in calendario con id ' +event.eventId);
+                console.log('ho inserito appuntamento in calendario con id ' +event.data.id); // -> da event.eventId a event.id o event.data.id
 
                 strTemp= event.eventId;
                 var str=strOutput;
