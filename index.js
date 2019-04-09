@@ -372,7 +372,7 @@ function callAVANEW(agent) {
         console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
         //***************** /09/04/2019 PER MODIFICA, RECUPERO DATE_UPDATE E TIME_UPDATE ossia la nuova data*/
         var dateStart2=agent.parameters.date_update;
-        var oraStart2=agent.paramDate.time_update;
+        var oraStart2=agent.parameters.time_update;
         console.log('Ho i dati per la modifica: dateStart2 '+dateStart2 + ', e oraStart2 '+oraStart2);
         /************************************** */
        
