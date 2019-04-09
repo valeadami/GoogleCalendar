@@ -175,17 +175,27 @@ app.get('/testSessione', function(req, res, next) {
         agent.parameters['date']=req.body.queryResult.parameters.date;
         console.log('la data = '+req.body.queryResult.parameters.date);
     }
-    
+    if (req.body.queryResult.parameters.time){
+      agent.parameters['time']=req.body.queryResult.parameters.time;
+      console.log('**************orario del evento da CREARE ' + req.body.queryResult.parameters.time);
+    }
     //03/04/2019
     if (req.body.queryResult.parameters.any){
         agent.parameters['any']=req.body.queryResult.parameters.any;
         console.log('titolo del evento da creare ' + req.body.queryResult.parameters.any);
     }
-    if (req.body.queryResult.parameters.time){
-        agent.parameters['time']=req.body.queryResult.parameters.time;
-        console.log('**************orario del evento da creare ' + req.body.queryResult.parameters.time);
+    
+    //09/04/2019 per update
+    if (req.body.queryResult.parameters.date1){
+      agent.parameters['date1']=req.body.queryResult.parameters.date1;
+      console.log('la data1 DI MODIFICA = '+req.body.queryResult.parameters.date1);
     }
- 
+    if (req.body.queryResult.parameters.time1){
+    agent.parameters['time1']=req.body.queryResult.parameters.time1;
+    console.log('**************orario del evento da MODIFICARE ' + req.body.queryResult.parameters.time1);
+    }
+  //fine 09/04/2019
+  
 
     //fulfillment text
     if (req.body.queryResult.fulfillmentText){
@@ -360,6 +370,12 @@ function callAVANEW(agent) {
         // mi interessa solo la parte dopo il T 
         var dateTimeStart=agent.parameters.time; 
         console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
+        //***************** /09/04/2019 PER MODIFICA, RECUPERO DATE1 E TIME1 ossia la nuova data*/
+        var dateStart2=agent.parameters.date1;
+        var oraStart2=agent.paramDate.time1;
+        console.log('Ho i dati per la modifica: dateStart2 '+dateStart2 + ', e oraStart2 '+oraStart2);
+        /************************************** */
+       
         //05/04/2019 per eliminazione: recupero il contesto per avere la data richiesta 
         var ctx=agent.context.get('delappointment-followup');
         var dataDaEliminare ='';
@@ -473,8 +489,27 @@ function callAVANEW(agent) {
                 resolve(agent);*/
 
             break;
-          //28/01/2019 AGGIUNTO ANCHE LO STOP
-        
+              //28/01/2019 AGGIUNTO ANCHE LO STOP
+            //08/04/2019 UPDATE MODIFICA APPUNTAMENTO PER ID EVENTO
+            //prima recupero id e poi faccio update
+          case 'updateAppuntamento':
+                console.log('sono in updateAppuntamento');
+                getEventByIdEdit(dataRichiesta,dateTimeStart,titoloApp).then((event)=>{
+                  console.log('ho recuperato evento con id ' +event.data.id); 
+  
+                
+                  agent.add('ho recuperato evento con id '+event.data.id);
+                  
+                  resolve(agent);
+  
+              }).catch((error) => {
+                  console.log('Si è verificato errore in updateAppuntamento: ' +error);
+                  agent.add('Ops...' +error);
+                  resolve(agent);
+              });
+
+
+          break;
           case 'STOP':
           if (agent.requestSource=="ACTIONS_ON_GOOGLE"){
                   
@@ -701,6 +736,84 @@ function deleteEvents(arIDs) {
 }
 //FINE ELIMINAZIONE
 /****************** */
+/**** 08/04/2019 MODIFICA */
+function getEventByIdEdit(dateStart,OraStart, titolo) {
+  return new Promise((resolve, reject) => {
+  
+   //recupero evento da spostare 
+calendar.events.list({
+  auth: serviceAccountAuth,
+  calendarId: calendarId,
+  auth: serviceAccountAuth,
+  calendarId: calendarId,
+  timeMin: convertParametersDate(dateStart,OraStart), 
+  singleEvents: true,
+
+  q: titolo //any
+
+}, (err, res) => {
+  if (err) return console.log('The API returned an error da listEvent: ' + err);
+  const events = res.data.items;
+  if (events.length) {
+  
+    events.map((event, i) => {
+      var start = event.start.dateTime || event.start.date;
+      var id=event.id; 
+     console.log('il valore di id ' + id);
+
+    });
+   
+  } else {
+    console.log('Non ho trovato appuntamento con questo filtro');
+    //resolve('No upcoming events found');
+  }
+  //risolvo events, caricati o meno
+   resolve(events);
+});
+});
+}
+function getUpdate(IDEvent, dateStart2,oraStart2) {
+  return new Promise((resolve, reject) => {
+   
+     console.log('IN getUpdate con idEvent '+ IDEvent);
+    //da modificare le date come fatto in createAppointment
+     const appointmentDuration = 1;
+      
+    var nuovaData=convertParametersDate(dateStart2,oraStart2);
+    console.log('in getUpdate nuovaData con valore '+nuovaData); 
+    var termine=addHours(nuovaData,appointmentDuration);
+    console.log('in getUpdate data termine con valore '+nuovaData); 
+    calendar.events.update({ auth: serviceAccountAuth,
+        calendarId: calendarId,
+         eventId:IDEvent,
+           //qui faccio le modifiche che servono                  
+        resource: {//summary: 'modificaupdate', //dovrebbe rimanere inalterato 
+          start: {dateTime: nuovaData }, //	questo deve cambiare
+          end: {dateTime: termine
+         }},
+          
+      }, (err, res) => {
+  if (err) return console.log('The API returned an error da updateEvent: ' + err);
+
+      const event = res.data.id;
+      console.log('res.data.id '+ event);
+ 
+  if (event) {
+   
+    console.log('Modificato evento con id '+event);
+  } else {
+   
+    console.log('Non ho modificato evento');
+   
+     
+  }
+  //risolvo events, caricati o meno
+   resolve(event);
+});
+});
+}
+
+/***** */
 // A helper function that adds the integer value of 'hoursToAdd' to the Date instance 'dateObj' and returns a new Data instance.
 function addHours(dateObj, hoursToAdd) {
     return new Date(new Date(dateObj).setHours(dateObj.getHours() + hoursToAdd));
@@ -716,9 +829,9 @@ function addHours(dateObj, hoursToAdd) {
     return dateObj.toLocaleDateString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
   } 
   function convertParametersDate(date, time){
-      console.log('sto cazzo de date '+date + ' e sto cazzo de time ' + time + ' con timeZoneOffset' +timeZoneOffset);
+      console.log('data: '+date + ' e  time: ' + time + ' con timeZoneOffset' +timeZoneOffset);
       var v=new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
-      console.log('sto cazzo de convert '+v);
+      console.log('dopo convert '+v);
       return v;
     //new Date(Date.parse(date.split('T')[0] + 'T' + time.split('T')[1].split('+')[0] + timeZoneOffset));
   }
