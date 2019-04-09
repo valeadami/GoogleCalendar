@@ -379,9 +379,13 @@ function callAVANEW(agent) {
         //05/04/2019 per eliminazione: recupero il contesto per avere la data richiesta 
         var ctx=agent.context.get('delappointment-followup');
         var dataDaEliminare ='';
+        var titoloAppDaEliminare='';
+        var startOraStartDaEliminare='';
         if (ctx){
             dataDaEliminare = ctx.parameters.date;
-            console.log('in contesto delappointment-followup elimino eventi in data '+dataDaEliminare);
+            titoloAppDaEliminare=ctx.parameters.any;
+            oraStartDaEliminare=ctx.parameters.time;
+            console.log('in contesto delappointment-followup elimino eventi in data '+dataDaEliminare +', titoloDaElim '+titoloAppDaEliminare + ', ora evento da elim '+ oraStartDaEliminare);
     
         }
     
@@ -456,6 +460,26 @@ function callAVANEW(agent) {
             //la recupero dal contesto
             
             console.log('sono in deleteAppointment');
+            if (titoloAppDaEliminare && oraStartDaEliminare){
+              getEventByIdEdit(dataRichiesta,dateTimeStart,titoloApp).then((event)=>{
+                if (event.length){
+                  var id=event[0].id;
+                  console.log('ho recuperato evento con id PER ELIMINAZIONE: ' +id); 
+                  deleteEvents(event).then((strId)=>{
+                   
+                    //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
+                    agent.add('Ho eliminato evento con id '+id);
+                    resolve(agent);
+
+                  }).catch((error) => {
+                    console.log('Si è verificato errore in deleteAppointment: ' +error);
+                    agent.add('Ops...' +error);
+                    resolve(agent);
+                });
+                
+              } 
+            });
+          }
                 getEventsForDelete(dataDaEliminare).then((arIDs)=>{
                     console.log('sono in getEventsForDelete con dataDaEliminare '+ dataDaEliminare);
                     //elimino effettivamente gli eventi tramite id
@@ -571,40 +595,7 @@ function callAVANEW(agent) {
 
 /*************  */
  //funzione mia
- /*
- function listAppointment (agent) {
-    return new Promise((resolve, reject) => {
-     var pd=convertParametersDateMia(agent.parameters.date,true);
-     var fine=convertParametersDateMia(agent.parameters.date,false);
-   
-     
-    console.log('la data di inizio è ' + pd + ', fine è ' + fine);
-  
-
-      listEvents(pd).then((events) => {
-      console.log('sono in listEvents');
-        var strTemp='';
-   
-       if (events.length){
-          for(var i=0; i<events.length; i++){
-             var start=new Date(events[i].start.dateTime).toDateString();
-             start=start.toLocaleString('it-IT', { weekday: 'long',day: 'numeric', month: 'long',  timeZone: timeZone });
-           
-            strTemp+='Il giorno  '+start + ' hai questi appuntamenti: '+ events[i].summary ;
-            console.log('strTemp ' + strTemp);
-          }
-          agent.add(strTemp);
-          resolve(agent);
-        }else{
-          agent.add('Non hai eventi per questa data ' + (new Date(pd)).toDateString());
-          resolve(agent);
-        }
-  }); 
-}).catch((error) => {
-    agent.add('PD: qualcosa è andato storto '+error);
-    resolve(agent);
-  });
-}*/
+ 
   function listEvents(paramDate) {
     return new Promise((resolve, reject) => {
      var pd=convertParametersDateMia(paramDate,true);
@@ -631,25 +622,7 @@ function callAVANEW(agent) {
 });
 }
 
-//creare un nuovo appuntamento
-//funzione per creare il mio appuntamento
-/*function createNewAppointment (agent) {
-    // Use the Dialogflow's date and time parameters to create Javascript Date instances, 'dateTimeStart' and 'dateTimeEnd',
-    // which are used to specify the appointment's time.
-    const appointmentDuration = 1;// Define the length of the appointment to be one hour.
-    const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
-    const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
-    const appointmentTimeString = getLocaleTimeString(dateTimeStart);
-    const appointmentDateString = getLocaleDateString(dateTimeStart);
-    const title=agent.parameters.any;
-    // Check the availability of the time slot and set up an appointment if the time slot is available on the calendar
-    return createAppointment(dateTimeStart, dateTimeEnd,title).then(() => {
-      agent.add(`OK. Salvato evento in data ${appointmentDateString} alle ore ${appointmentTimeString} con il titolo ${title}.`);
-    }).catch(() => {
-      agent.add(`Mi dispiace, sei già occupato in data ${appointmentDateString} alle ore ${appointmentTimeString}. Che cosa posso fare ora?`);
-    });
-  }
-*/
+
 //dataRichiesta,dateTimeStart,titolo
   function createAppointment (dateTimeStart, dateTimeEnd,titleSummary) {
     return new Promise((resolve, reject) => {
