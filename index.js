@@ -186,13 +186,13 @@ app.get('/testSessione', function(req, res, next) {
     }
     
     //09/04/2019 per update
-    if (req.body.queryResult.parameters.date1){
-      agent.parameters['date1']=req.body.queryResult.parameters.date1;
-      console.log('la data1 DI MODIFICA = '+req.body.queryResult.parameters.date1);
+    if (req.body.queryResult.parameters.date_update){
+      agent.parameters['date_update']=req.body.queryResult.parameters.date_update;
+      console.log('la date_update DI MODIFICA = '+req.body.queryResult.parameters.date_update);
     }
-    if (req.body.queryResult.parameters.time1){
-    agent.parameters['time1']=req.body.queryResult.parameters.time1;
-    console.log('**************orario del evento da MODIFICARE ' + req.body.queryResult.parameters.time1);
+    if (req.body.queryResult.parameters.time_update){
+    agent.parameters['time_update']=req.body.queryResult.parameters.time_update;
+    console.log('**************time_update del evento da MODIFICARE ' + req.body.queryResult.parameters.time_update);
     }
   //fine 09/04/2019
   
@@ -370,9 +370,9 @@ function callAVANEW(agent) {
         // mi interessa solo la parte dopo il T 
         var dateTimeStart=agent.parameters.time; 
         console.log('strOutput agente prima di EsseTre :' + strOutput + ' e con dateTimeStart '+dateTimeStart);
-        //***************** /09/04/2019 PER MODIFICA, RECUPERO DATE1 E TIME1 ossia la nuova data*/
-        var dateStart2=agent.parameters.date1;
-        var oraStart2=agent.paramDate.time1;
+        //***************** /09/04/2019 PER MODIFICA, RECUPERO DATE_UPDATE E TIME_UPDATE ossia la nuova data*/
+        var dateStart2=agent.parameters.date_update;
+        var oraStart2=agent.paramDate.time_update;
         console.log('Ho i dati per la modifica: dateStart2 '+dateStart2 + ', e oraStart2 '+oraStart2);
         /************************************** */
        
@@ -494,6 +494,9 @@ function callAVANEW(agent) {
             //prima recupero id e poi faccio update
           case 'updateAppuntamento':
                 console.log('sono in updateAppuntamento');
+
+                
+
                 getEventByIdEdit(dataRichiesta,dateTimeStart,titoloApp).then((event)=>{
                   console.log('ho recuperato evento con id ' +event.data.id); 
   
@@ -737,7 +740,7 @@ function deleteEvents(arIDs) {
 //FINE ELIMINAZIONE
 /****************** */
 /**** 08/04/2019 MODIFICA */
-function getEventByIdEdit(dateStart,OraStart, titolo) {
+function getEventByIdEdit(dateStart,OraStart,titolo) {
   return new Promise((resolve, reject) => {
   
    //recupero evento da spostare 
