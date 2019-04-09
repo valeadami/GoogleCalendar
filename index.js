@@ -461,6 +461,7 @@ function callAVANEW(agent) {
             
             console.log('sono in deleteAppointment');
             if (titoloAppDaEliminare && oraStartDaEliminare){
+              console.log('ELIMINAZIONE SINGOLA: titolo '+ titoloAppDaEliminare + ', data da eliminare '+ oraStartDaEliminare);
               getEventByIdEdit(dataRichiesta,dateTimeStart,titoloApp).then((event)=>{
                 if (event.length){
                   var id=event[0].id;
@@ -479,38 +480,39 @@ function callAVANEW(agent) {
                 
               } 
             });
-          }
-                getEventsForDelete(dataDaEliminare).then((arIDs)=>{
-                    console.log('sono in getEventsForDelete con dataDaEliminare '+ dataDaEliminare);
-                    //elimino effettivamente gli eventi tramite id
-                    if (arIDs.length){
-                        console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
-                        for (var i=0;i<arIDs.length;i++){
-                          console.log('sto eliminando id evento : ' +arIDs[i]);
-                            calendar.events.delete({
-                            auth: serviceAccountAuth,
-                            calendarId: calendarId,
-                            eventId:arIDs[i]
-                            });
-                       
-                        }//chiudo for
-                    }//chiudo if
+          }else{ //ELIMINAZIONE BATCH 
+            getEventsForDelete(dataDaEliminare).then((arIDs)=>{
+              console.log('sono in getEventsForDelete con dataDaEliminare '+ dataDaEliminare);
+              //elimino effettivamente gli eventi tramite id
+              if (arIDs.length){
+                  console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
+                  for (var i=0;i<arIDs.length;i++){
+                    console.log('sto eliminando id evento : ' +arIDs[i]);
+                      calendar.events.delete({
+                      auth: serviceAccountAuth,
+                      calendarId: calendarId,
+                      eventId:arIDs[i]
+                      });
+                 
+                  }//chiudo for
+              }//chiudo if
 
-                    else {
-                      console.log('arIDs non pervenuto ');
-                     
-                    }
-                    console.log('eliminazione avvenuta');
-                    agent.add('eliminazione avvenuta. Cosa vuoi fare ora?');
-                    resolve(agent);
-    
-                }).catch((error) => {
-                    console.log('Si è verificato errore in deleteAppointment: ' +error);
-                    agent.add('Ops...' +error);
-                    resolve(agent);
-                });
-               /* agent.add('pd' );
-                resolve(agent);*/
+              else {
+                console.log('arIDs non pervenuto ');
+               
+              }
+              console.log('eliminazione avvenuta');
+              agent.add('eliminazione avvenuta. Cosa vuoi fare ora?');
+              resolve(agent);
+
+          }).catch((error) => {
+              console.log('Si è verificato errore in deleteAppointment: ' +error);
+              agent.add('Ops...' +error);
+              resolve(agent);
+          });
+          }
+                
+            
 
             break;
               //28/01/2019 AGGIUNTO ANCHE LO STOP
