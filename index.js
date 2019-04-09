@@ -504,7 +504,9 @@ function callAVANEW(agent) {
                     var id=event[0].id;
                     console.log('ho recuperato evento con id ' +id); 
                     getUpdate(id, dateStart2,oraStart2,titoloApp).then((strId)=>{
-                      agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+new Date(oraStart2).toLocaleTimeString(('it-IT',options)));
+                      var ndata=new Date(oraStart2).toLocaleTimeString(('it-IT',options));
+                      var nndata=addHours(ndata,2)
+                      agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
       
                       resolve(agent);
 
