@@ -498,12 +498,25 @@ function callAVANEW(agent) {
                 
 
                 getEventByIdEdit(dataRichiesta,dateTimeStart,titoloApp).then((event)=>{
-                  console.log('ho recuperato evento con id ' +event[0].id); 
-  
-                
-                  agent.add('ho recuperato evento con id '+event[0].id);
+                  if (event.length){
+                    var id=event[0].id;
+                    console.log('ho recuperato evento con id ' +id); 
+                    getUpdate(id, dateStart2,oraStart2).then((strId)=>{
+                      agent.add('ho modificato con successo evento con id '+strId);
+      
+                      resolve(agent);
+
+                    }).catch((error) => {
+                      console.log('Si è verificato errore in getUpdate: ' +error);
+                      agent.add('Ops...' +error);
+                      resolve(agent);
+                  });
+                    
+                  }
+                 
+
+                //questo ok
                   
-                  resolve(agent);
   
               }).catch((error) => {
                   console.log('Si è verificato errore in updateAppuntamento: ' +error);
