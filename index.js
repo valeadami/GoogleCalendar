@@ -502,7 +502,7 @@ function callAVANEW(agent) {
                     var id=event[0].id;
                     console.log('ho recuperato evento con id ' +id); 
                     getUpdate(id, dateStart2,oraStart2,titoloApp).then((strId)=>{
-                      agent.add('ho modificato con successo evento con id '+strId);
+                      agent.add('ok spostato appuntamento' +titoloApp +'in data ' + dateStart2.toDateString()+ +' alle ore '+oraStart2.toTimeString());
       
                       resolve(agent);
 
