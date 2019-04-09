@@ -501,7 +501,7 @@ function callAVANEW(agent) {
                   if (event.length){
                     var id=event[0].id;
                     console.log('ho recuperato evento con id ' +id); 
-                    getUpdate(id, dateStart2,oraStart2).then((strId)=>{
+                    getUpdate(id, dateStart2,oraStart2,titoloApp).then((strId)=>{
                       agent.add('ho modificato con successo evento con id '+strId);
       
                       resolve(agent);
@@ -788,7 +788,7 @@ calendar.events.list({
 });
 });
 }
-function getUpdate(IDEvent, dateStart2,oraStart2) {
+function getUpdate(IDEvent, dateStart2,oraStart2,titoloApp) {
   return new Promise((resolve, reject) => {
    
      console.log('IN getUpdate con idEvent '+ IDEvent);
@@ -803,7 +803,7 @@ function getUpdate(IDEvent, dateStart2,oraStart2) {
         calendarId: calendarId,
          eventId:IDEvent,
            //qui faccio le modifiche che servono                  
-        resource: {//summary: 'modificaupdate', //dovrebbe rimanere inalterato 
+        resource: {summary: titoloApp, //ci vuole comunque il titoloApp altrimenti crea evento senza titolo
           start: {dateTime: nuovaData }, //	questo deve cambiare
           end: {dateTime: termine
          }},
