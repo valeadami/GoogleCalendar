@@ -406,7 +406,7 @@ function callAVANEW(agent) {
                 }   // fine if
                 else{
 
-                strTemp='Non ho trovato eventi per la data ' +new Date(dataRichiesta.toDateString());
+                strTemp='Non ho trovato eventi per la data ' +new Date(dataRichiesta).toDateString();
                 }
                 var str=strOutput;
                 str=str.replace(/(@)/gi, strTemp);
