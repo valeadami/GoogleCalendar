@@ -802,6 +802,20 @@ function getUpdate(IDEvent, dateStart2,oraStart2,titoloApp) {
     console.log('in getUpdate nuovaData con valore '+nuovaData); 
     var termine=addHours(nuovaData,appointmentDuration);
     console.log('in getUpdate data termine con valore '+nuovaData); 
+    //prima di inserire appuntamento modificato, controlla che non vada in sovrapposizione con esistente
+
+    calendar.events.list({  // List all events in the specified time period
+      auth: serviceAccountAuth,
+      calendarId: calendarId,
+      timeMin:  nuovaData.toISOString(),// dinizio,
+      timeMax: termine.toISOString()//dateTimeEnd.toISOString() .toISOString()
+    }, (err, calendarResponse) => {
+     
+      if (err || calendarResponse.data.items.length > 0) {
+        reject(err || new Error('Orario già occupato da un altro evento'));
+      } 
+    });
+    //se range temporale è libero, procedi con update
     calendar.events.update({ auth: serviceAccountAuth,
         calendarId: calendarId,
          eventId:IDEvent,
