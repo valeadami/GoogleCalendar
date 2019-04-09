@@ -498,10 +498,10 @@ function callAVANEW(agent) {
                 
 
                 getEventByIdEdit(dataRichiesta,dateTimeStart,titoloApp).then((event)=>{
-                  console.log('ho recuperato evento con id ' +event.data.id); 
+                  console.log('ho recuperato evento con id ' +event.id); 
   
                 
-                  agent.add('ho recuperato evento con id '+event.data.id);
+                  agent.add('ho recuperato evento con id '+event.id);
                   
                   resolve(agent);
   
