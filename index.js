@@ -465,7 +465,7 @@ function callAVANEW(agent) {
               getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
                 if (event.length){
                   var id=event[0].id;
-                  console.log('ho recuperato evento con id PER ELIMINAZIONE: ' +id); 
+                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); 
                   deleteEvents(event).then((strId)=>{
                    
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
@@ -482,7 +482,7 @@ function callAVANEW(agent) {
             });
           }else{ //ELIMINAZIONE BATCH 
             getEventsForDelete(dataDaEliminare).then((arIDs)=>{
-              console.log('sono in getEventsForDelete con dataDaEliminare '+ dataDaEliminare);
+              console.log('sono in getEventsForDelete (BATCH) con dataDaEliminare '+ dataDaEliminare);
               //elimino effettivamente gli eventi tramite id
               if (arIDs.length){
                   console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
