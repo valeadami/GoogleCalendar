@@ -471,7 +471,7 @@ function callAVANEW(agent) {
               //    deleteEvents(id[0]).then((strId)=>{
                 deleteEventoSingolo('35rrjdannmfm1cji010l861j7k').then((strId)=>{
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
-                    agent.add('Ho eliminato evento con id '+id); 
+                    agent.add('Ho eliminato evento con id 35rrjdannmfm1cji010l861j'); //+id
                     resolve(agent);
 
                   }).catch((error) => {
