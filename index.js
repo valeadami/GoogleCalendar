@@ -462,27 +462,27 @@ function callAVANEW(agent) {
             console.log('sono in deleteAppointment');
             if (titoloAppDaEliminare && oraStartDaEliminare){
               console.log('ELIMINAZIONE SINGOLA: titolo '+ titoloAppDaEliminare + ', data da eliminare '+ oraStartDaEliminare);
-            /*  getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
+              getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
                 if (event.length){
                   console.log('event è un array...')
                  var id=event[0].id;
-                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); */
-                var id=['vebkv8rvhlqgb52ppkoq3su0g0'];
-                
-                  deleteEvents(id).then((strId)=>{ //vebkv8rvhlqgb52ppkoq3su0g0
-               // deleteEventoSingolo('35rrjdannmfm1cji010l861j7k').then((strId)=>{
-                    //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
-                    agent.add('Ho eliminato evento con id vebkv8rvhlqgb52ppkoq3su0g0'); //+id
+                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id);
+               
+                /*
+                 deleteEvents(id).then((strId)=>{ 
+              
+               
+                    agent.add('Ho eliminato evento con id '+id); //
                     resolve(agent);
 
                   }).catch((error) => {
                     console.log('Si è verificato errore in deleteAppointment: ' +error);
                     agent.add('Ops...' +error);
                     resolve(agent);
-                });
+                });*/
                 
               } 
-           // });
+            });
           /*}else{ //ELIMINAZIONE BATCH 
             getEventsForDelete(dataDaEliminare).then((arIDs)=>{
               console.log('sono in getEventsForDelete (BATCH) con dataDaEliminare '+ dataDaEliminare);
@@ -513,7 +513,7 @@ function callAVANEW(agent) {
               agent.add('Ops...' +error);
               resolve(agent);
           });*/
-         // }
+         }
                 
             
 
@@ -753,13 +753,12 @@ function deleteEventoSingolo(stringaID) {
 /**** 08/04/2019 MODIFICA */
 function getEventByIdEdit(dateStart,OraStart,titolo) {
   return new Promise((resolve, reject) => {
-  console.log('*************sono in getEventByIdEdit');
+  console.log('*************sono in getEventByIdEdit con dateStart '+ dateStart +', OraStart '+ OraStart +', titolo '+ titolo);
    //recupero evento da spostare 
 calendar.events.list({
   auth: serviceAccountAuth,
   calendarId: calendarId,
   auth: serviceAccountAuth,
-  calendarId: calendarId,
   timeMin: convertParametersDate(dateStart,OraStart), 
   singleEvents: true,
 
@@ -773,7 +772,7 @@ calendar.events.list({
     events.map((event, i) => {
       var start = event.start.dateTime || event.start.date;
       var id=event.id; 
-     console.log('il valore di id ' + id);
+     console.log('il valore di id evento in getEventByIdEdit ' + id);
 
     });
    
