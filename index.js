@@ -467,11 +467,12 @@ function callAVANEW(agent) {
                   console.log('event è un array...')
                  var id=event[0].id;
                   console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); */
-                 //id
-              //    deleteEvents(id[0]).then((strId)=>{
-                deleteEventoSingolo('35rrjdannmfm1cji010l861j7k').then((strId)=>{
+                var id=['vebkv8rvhlqgb52ppkoq3su0g0'];
+                
+                  deleteEvents(id).then((strId)=>{ //vebkv8rvhlqgb52ppkoq3su0g0
+               // deleteEventoSingolo('35rrjdannmfm1cji010l861j7k').then((strId)=>{
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
-                    agent.add('Ho eliminato evento con id 35rrjdannmfm1cji010l861j'); //+id
+                    agent.add('Ho eliminato evento con id vebkv8rvhlqgb52ppkoq3su0g0'); //+id
                     resolve(agent);
 
                   }).catch((error) => {
