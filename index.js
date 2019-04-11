@@ -711,7 +711,7 @@ function getEventsForDelete(paramDate) {
 //funzione che elimina eventi
 function deleteEvents(arIDs) {
     return new Promise((resolve, reject) => {
-   
+   console.log('porco dio son in deleteEvents');
       if (arIDs.length){
         console.log('sono in deleteEvents e arIDs.length = ' +arIDs.length);
         for (var i=0;i<arIDs.length;i++){
