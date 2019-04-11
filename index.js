@@ -462,14 +462,14 @@ function callAVANEW(agent) {
             console.log('sono in deleteAppointment');
             if (titoloAppDaEliminare && oraStartDaEliminare){
               console.log('ELIMINAZIONE SINGOLA: titolo '+ titoloAppDaEliminare + ', data da eliminare '+ oraStartDaEliminare);
-              getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
+            /*  getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
                 if (event.length){
                   console.log('event è un array...')
                  var id=event[0].id;
-                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); 
+                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); */
                  //id
               //    deleteEvents(id[0]).then((strId)=>{
-                deleteEventoSingolo(id).then((strId)=>{
+                deleteEventoSingolo('35rrjdannmfm1cji010l861j7k').then((strId)=>{
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
                     agent.add('Ho eliminato evento con id '+id); 
                     resolve(agent);
@@ -481,7 +481,7 @@ function callAVANEW(agent) {
                 });
                 
               } 
-            });
+           // });
           /*}else{ //ELIMINAZIONE BATCH 
             getEventsForDelete(dataDaEliminare).then((arIDs)=>{
               console.log('sono in getEventsForDelete (BATCH) con dataDaEliminare '+ dataDaEliminare);
@@ -512,7 +512,7 @@ function callAVANEW(agent) {
               agent.add('Ops...' +error);
               resolve(agent);
           });*/
-          }
+         // }
                 
             
 
