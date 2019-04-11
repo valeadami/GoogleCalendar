@@ -465,11 +465,13 @@ function callAVANEW(agent) {
               getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloAppDaEliminare).then((event)=>{
                 if (event.length){
                   console.log('event è un array...')
-                 var id=event[0].id;
-                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id);
+                  var id=[]; //deve essere un array di stringhe
+                  id[0]=event[0].id;
+               //  var id=event[0].id;
+                  console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id[0]);
                
                 
-                 deleteEvents(event).then((strId)=>{ 
+                 deleteEvents(id).then((strId)=>{ 
               
                
                     agent.add('Ho eliminato evento con id '+id); //
