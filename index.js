@@ -464,10 +464,12 @@ function callAVANEW(agent) {
               console.log('ELIMINAZIONE SINGOLA: titolo '+ titoloAppDaEliminare + ', data da eliminare '+ oraStartDaEliminare);
               getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
                 if (event.length){
-                  var id=event[0].id;
+                //  var id=event[0].id;
+                  var id=[];
+                  id[0]='35rrjdannmfm1cji010l861j7k';
                   console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); 
                  //id
-                  deleteEvents('hilbo4otg73j0517hgebk3nhhg').then((strId)=>{
+                  deleteEvents(id[0]).then((strId)=>{
                    
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
                     agent.add('Ho eliminato evento con id '+id);
