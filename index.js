@@ -480,7 +480,7 @@ function callAVANEW(agent) {
                 
               } 
             });
-          }else{ //ELIMINAZIONE BATCH 
+          /*}else{ //ELIMINAZIONE BATCH 
             getEventsForDelete(dataDaEliminare).then((arIDs)=>{
               console.log('sono in getEventsForDelete (BATCH) con dataDaEliminare '+ dataDaEliminare);
               //elimino effettivamente gli eventi tramite id
@@ -509,7 +509,7 @@ function callAVANEW(agent) {
               console.log('Si è verificato errore in deleteAppointment: ' +error);
               agent.add('Ops...' +error);
               resolve(agent);
-          });
+          });*/
           }
                 
             
@@ -733,7 +733,7 @@ function deleteEvents(arIDs) {
 /**** 08/04/2019 MODIFICA */
 function getEventByIdEdit(dateStart,OraStart,titolo) {
   return new Promise((resolve, reject) => {
-  
+  console.log('*************sono in getEventByIdEdit');
    //recupero evento da spostare 
 calendar.events.list({
   auth: serviceAccountAuth,
