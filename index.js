@@ -467,7 +467,7 @@ function callAVANEW(agent) {
                   console.log('event è un array...')
                   var id=[]; //deve essere un array di stringhe
                   id[0]=event[0].id;
-               //  var id=event[0].id;
+              
                   console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id[0]);
                
                 
@@ -485,7 +485,7 @@ function callAVANEW(agent) {
                 
               } 
             });
-          /*}else{ //ELIMINAZIONE BATCH 
+          }else{ //ELIMINAZIONE BATCH 
             getEventsForDelete(dataDaEliminare).then((arIDs)=>{
               console.log('sono in getEventsForDelete (BATCH) con dataDaEliminare '+ dataDaEliminare);
               //elimino effettivamente gli eventi tramite id
@@ -514,7 +514,7 @@ function callAVANEW(agent) {
               console.log('Si è verificato errore in deleteAppointment: ' +error);
               agent.add('Ops...' +error);
               resolve(agent);
-          });*/
+          });
          }
                 
             
