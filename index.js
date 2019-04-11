@@ -464,15 +464,14 @@ function callAVANEW(agent) {
               console.log('ELIMINAZIONE SINGOLA: titolo '+ titoloAppDaEliminare + ', data da eliminare '+ oraStartDaEliminare);
               getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
                 if (event.length){
-                //  var id=event[0].id;
-                  var id=[];
-                  id[0]='35rrjdannmfm1cji010l861j7k';
+                  console.log('event è un array...')
+                 var id=event[0].id;
                   console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); 
                  //id
-                  deleteEvents(id[0]).then((strId)=>{
-                   
+              //    deleteEvents(id[0]).then((strId)=>{
+                deleteEventoSingolo(id).then((strId)=>{
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
-                    agent.add('Ho eliminato evento con id '+id);
+                    agent.add('Ho eliminato evento con id '+id); 
                     resolve(agent);
 
                   }).catch((error) => {
@@ -711,7 +710,7 @@ function getEventsForDelete(paramDate) {
 //funzione che elimina eventi
 function deleteEvents(arIDs) {
     return new Promise((resolve, reject) => {
-   console.log('porco dio son in deleteEvents');
+   console.log(' son in deleteEvents');
       if (arIDs.length){
         console.log('sono in deleteEvents e arIDs.length = ' +arIDs.length);
         for (var i=0;i<arIDs.length;i++){
@@ -729,6 +728,23 @@ function deleteEvents(arIDs) {
       console.log('arIDs non pervenuto ');
       resolve('NOK');
     }
+});
+}
+//per test
+function deleteEventoSingolo(stringaID) {
+  return new Promise((resolve, reject) => {
+ console.log(' son in deleteEventoSingolo');
+   
+      console.log('sono in deleteEventoSingolo = ' +stringaID);
+     
+        
+        calendar.events.delete({
+        auth: serviceAccountAuth,
+        calendarId: calendarId,
+        eventId:stringaID
+   });
+       resolve('OK eliminato sto appuntamento del cazzo');
+ 
 });
 }
 //FINE ELIMINAZIONE
