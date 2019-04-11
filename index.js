@@ -462,7 +462,7 @@ function callAVANEW(agent) {
             console.log('sono in deleteAppointment');
             if (titoloAppDaEliminare && oraStartDaEliminare){
               console.log('ELIMINAZIONE SINGOLA: titolo '+ titoloAppDaEliminare + ', data da eliminare '+ oraStartDaEliminare);
-              getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloApp).then((event)=>{
+              getEventByIdEdit(dataDaEliminare,oraStartDaEliminare,titoloAppDaEliminare).then((event)=>{
                 if (event.length){
                   console.log('event è un array...')
                  var id=event[0].id;
