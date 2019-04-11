@@ -466,7 +466,10 @@ function callAVANEW(agent) {
                 if (event.length){
                   var id=event[0].id;
                   console.log('ho recuperato evento con id PER ELIMINAZIONE SINGOLA: ' +id); 
-                  deleteEvents(event).then((strId)=>{
+                  agent.add('Ho recuperato evento con id '+id);
+                  resolve(agent);
+                 
+                  /* deleteEvents(event).then((strId)=>{
                    
                     //agent.add('ok spostato appuntamento ' +titoloApp +' in DATA ' + new Date(dateStart2).toLocaleDateString('it-IT') +',  alle ORE '+nndata);
                     agent.add('Ho eliminato evento con id '+id);
@@ -476,7 +479,7 @@ function callAVANEW(agent) {
                     console.log('Si è verificato errore in deleteAppointment: ' +error);
                     agent.add('Ops...' +error);
                     resolve(agent);
-                });
+                });*/
                 
               } 
             });
