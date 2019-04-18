@@ -60,6 +60,11 @@ app.use(function (req, res, next) {
     
    
     next();*/
+    req.session.pd='porco dio';
+    req.session.matId='';
+    req.session.stuId='';
+  
+    next();
   })
   postData = querystring.stringify({
     'searchText': 'ciao',
