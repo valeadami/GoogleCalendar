@@ -91,9 +91,9 @@ app.use(function (req, res, next) {
   
   const calendar = google.calendar('v3');
   //process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
-  
+  /*
   const timeZone = 'Europe/Rome';  // Change it to your time zone
-  const timeZoneOffset = '+02:00'; 
+  const timeZoneOffset = '+02:00'; */
   
  //PER TEST
 

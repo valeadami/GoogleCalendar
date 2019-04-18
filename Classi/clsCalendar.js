@@ -2,7 +2,8 @@
    // Define the length of the appointment to be one hour.
 const appointmentDuration = 1;
 const maxRis=10; //al massimo restituisci 10 appuntamenti
-
+const timeZone = 'Europe/Rome';  // Change it to your time zone
+const timeZoneOffset = '+02:00'; 
 //funzioni per elencare, modificare eliminare eventi
  function listEvents(paramDate) {
     return new Promise((resolve, reject) => {
