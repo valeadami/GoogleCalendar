@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const session = require('express-session');
 /*********** */
 const request = require('request');
-const {google} = require('googleapis');
+//const {google} = require('googleapis');
 const querystring = require('querystring');
 //modifica del 18/04/2019
 var cld = require('./Classi/clsCalendar.js');
@@ -46,7 +46,7 @@ app.use(session({
   }));
 //uso le variabili di sessione
 app.use(function (req, res, next) {
-   
+   /*
     req.session.client_email=process.env.GOOGLE_CLIENT_EMAIL;
     var fixedKey = process.env.GOOGLE_CLIENT_PRIVATE_KEY;
     req.session.private_key= process.env.GOOGLE_CLIENT_PRIVATE_KEY; //fixedKey;
@@ -59,7 +59,7 @@ app.use(function (req, res, next) {
   
     
    
-    next();
+    next();*/
   })
   postData = querystring.stringify({
     'searchText': 'ciao',
@@ -83,16 +83,15 @@ app.use(function (req, res, next) {
       'Cookie':'' // +avaSession 
     }
   };
-
+/* commentato in data 18/04/2019
   const SCOPES = 'https://www.googleapis.com/auth/calendar';
   const calendarId = process.env.GOOGLE_CALENDAR_ID; //'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com';
   
   var serviceAccountAuth={}; //verrà dalla lettura delle var di ambiente di Heroku
-  
+
   const calendar = google.calendar('v3');
-  //process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
-  /*
-  const timeZone = 'Europe/Rome';  // Change it to your time zone
+
+  const timeZone = 'Europe/Rome';  
   const timeZoneOffset = '+02:00'; */
   
  //PER TEST
@@ -497,11 +496,11 @@ function callAVANEW(agent) {
                   console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
                   for (var i=0;i<arIDs.length;i++){
                     console.log('sto eliminando id evento : ' +arIDs[i]);
-                      calendar.events.delete({
+                   /*   calendar.events.delete({
                       auth: serviceAccountAuth,
                       calendarId: calendarId,
                       eventId:arIDs[i]
-                      });
+                      });*/
                  
                   }//chiudo for
               }//chiudo if

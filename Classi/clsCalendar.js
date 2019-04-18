@@ -1,9 +1,27 @@
 /************* 18/04/2019: classe clsCalendar con le funzioni per gestire calendario */
-   // Define the length of the appointment to be one hour.
+const {google} = require('googleapis');
+const SCOPES = 'https://www.googleapis.com/auth/calendar';
+const calendarId = process.env.GOOGLE_CALENDAR_ID; //'jqrf3mfgduhrrg0n6guig97tos@group.calendar.google.com';
+var serviceAccountAuth={}; //verrà dalla lettura delle var di ambiente di Heroku
+const calendar = google.calendar('v3');
+
+// Define the length of the appointment to be one hour.
 const appointmentDuration = 1;
 const maxRis=10; //al massimo restituisci 10 appuntamenti
 const timeZone = 'Europe/Rome';  // Change it to your time zone
 const timeZoneOffset = '+02:00'; 
+
+//recupero le credenziali dalle impostazioni di heroku app
+var mail=process.env.GOOGLE_CLIENT_EMAIL;
+var fixedKey = process.env.GOOGLE_CLIENT_PRIVATE_KEY;
+fixedKey=fixedKey.replace(new RegExp("\\\\n", "\g"), "\n");
+console.log('mail cal '+ mail + ', chiave '+fixedKey);
+serviceAccountAuth = new google.auth.JWT({
+  email: mail,
+  key: fixedKey,
+  scopes: SCOPES
+});
+
 //funzioni per elencare, modificare eliminare eventi
  function listEvents(paramDate) {
     return new Promise((resolve, reject) => {
