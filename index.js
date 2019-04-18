@@ -9,7 +9,7 @@ const request = require('request');
 //const {google} = require('googleapis');
 const querystring = require('querystring');
 //modifica del 18/04/2019
-//var cld = require('./Classi/clsCalendar.js');
+var cld = require('./Classi/clsCalendar.js');
 
 //******************** */
 //const path = require("path");
