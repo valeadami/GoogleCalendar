@@ -106,9 +106,9 @@ app.use(function (req, res, next) {
         var time = 	'2019-04-04T16:00:00+02:00';
         var timeZone='Europe/Rome';
         var timeZoneOffset='+02:00';
-        var nuovaData=convertParametersDate(date,time);
+        var nuovaData=cld.convertParametersDate(date,time);
         console.log('il tipo di nuovaData '+ typeof nuovaData + ' e con valore '+nuovaData); // object ok è una data
-        nuovaData=addHours(nuovaData,2)
+        nuovaData=cld.addHours(nuovaData,2)
         var options={
             weekday: 'long', month: 'long', day: 'numeric', timeZone: timeZone 
         }

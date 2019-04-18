@@ -15,7 +15,7 @@ const timeZoneOffset = '+02:00';
 var mail=process.env.GOOGLE_CLIENT_EMAIL;
 var fixedKey = process.env.GOOGLE_CLIENT_PRIVATE_KEY;
 fixedKey=fixedKey.replace(new RegExp("\\\\n", "\g"), "\n");
-console.log('mail cal '+ mail + ', chiave '+fixedKey);
+//console.log('mail cal '+ mail + ', chiave '+fixedKey);
 serviceAccountAuth = new google.auth.JWT({
   email: mail,
   key: fixedKey,
