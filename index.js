@@ -99,8 +99,8 @@ app.use(function (req, res, next) {
    
     app.get('/', function(req, res, next) {
       
-       // res.send('ok')
-        //res.send('<p>chiave: ' + req.session.private_key + ', email ' +req.session.client_email +'</p>');
+        res.send('ok')
+      /*
   
         var date =	'2019-04-04T12:00:00+02:00';
         var time = 	'2019-04-04T16:00:00+02:00';
@@ -115,7 +115,7 @@ app.use(function (req, res, next) {
         var nd2=nuovaData.toLocaleDateString('it-IT',options); // 2019-4-5 16:00:00 toLocaleString()
         console.log('valore di nd2 '+nd2);
       
-       res.send('<p>nuova data con aggiunta di 2 ore' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');
+       res.send('<p>nuova data con aggiunta di 2 ore' + nuovaData +', e con ISOString ' + nuovaData.toISOString()+'</p>');*/
      });
     app.get('/testLocale', function(req, res, next) {
       
