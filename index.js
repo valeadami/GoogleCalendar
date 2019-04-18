@@ -499,15 +499,27 @@ function callAVANEW(agent) {
               //elimino effettivamente gli eventi tramite id
               if (arIDs.length){
                   console.log('sto per eliminare evt e arIDs.length = ' +arIDs.length);
-                  for (var i=0;i<arIDs.length;i++){
+                   //commentato in data 18/04/2019
+                 /* for (var i=0;i<arIDs.length;i++){
                     console.log('sto eliminando id evento : ' +arIDs[i]);
-                   /*   calendar.events.delete({
+                   
+                      calendar.events.delete({
                       auth: serviceAccountAuth,
                       calendarId: calendarId,
                       eventId:arIDs[i]
                       });*/
-                 
-                  }//chiudo for
+                      cld.deleteEvents(arIDs).then((strId)=>{ 
+              
+               
+                        agent.add('Eliminato tutti gli eventi, cosa vuoi fare ora?'); 
+                        resolve(agent);
+    
+                      }).catch((error) => {
+                        console.log('Si è verificato errore in (BATCH) deleteAppointment: ' +error);
+                        agent.add('Ops...' +error);
+                        resolve(agent);
+                    });
+                 // }//chiudo for
               }//chiudo if
 
               else {
