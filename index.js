@@ -526,9 +526,9 @@ function callAVANEW(agent) {
                 console.log('arIDs non pervenuto ');
                
               }
-              console.log('eliminazione avvenuta');
+              /*console.log('eliminazione avvenuta');
               agent.add('eliminazione avvenuta. Cosa vuoi fare ora?');
-              resolve(agent);
+              resolve(agent);*/
 
           }).catch((error) => {
               console.log('Si è verificato errore in deleteAppointment: ' +error);
