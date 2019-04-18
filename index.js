@@ -412,7 +412,7 @@ function callAVANEW(agent) {
                       
                         console.log('-----  con toLocaleString '+ start);
                        
-                       strTemp+= events[i].summary +' alle ore ' + getLocaleTimeString(new Date(events[i].start.dateTime))  +'\n';
+                       strTemp+= events[i].summary +' alle ore ' + cld.getLocaleTimeString(new Date(events[i].start.dateTime))  +'\n';
                        console.log('strTemp ' + strTemp);
                      }
                 }   // fine if
