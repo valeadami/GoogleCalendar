@@ -9,7 +9,7 @@ const request = require('request');
 //const {google} = require('googleapis');
 const querystring = require('querystring');
 //modifica del 18/04/2019
-var cld = require('./Classi/clsCalendar.js');
+//var cld = require('./Classi/clsCalendar.js');
 
 //******************** */
 //const path = require("path");
@@ -99,7 +99,7 @@ app.use(function (req, res, next) {
    
     app.get('/', function(req, res, next) {
       
-        res.send('ok')
+        res.send('ok');
       /*
   
         var date =	'2019-04-04T12:00:00+02:00';
@@ -119,7 +119,7 @@ app.use(function (req, res, next) {
      });
     app.get('/testLocale', function(req, res, next) {
       
-       res.send('ok')
+       res.send('ok');
       
     });
 //PER TEST
@@ -137,8 +137,8 @@ app.get('/testSessione', function(req, res, next) {
 
  function WebhookProcessing(req, res) {
     const agent = new WebhookClient({request: req, response: res});
-    console.log('DA WebhookProcessing con SESSIONE : questi i valori di serviceAccountAuth: email ' + req.session.client_email + ', key: ' +req.session.private_key +', con scope '+ SCOPES);
-    if (req.session.client_email && req.session.private_key){
+   // console.log('DA WebhookProcessing con SESSIONE : questi i valori di serviceAccountAuth: email ' + req.session.client_email + ', key: ' +req.session.private_key +', con scope '+ SCOPES);
+   /* if (req.session.client_email && req.session.private_key){
 
 
         serviceAccountAuth = new google.auth.JWT({
@@ -155,7 +155,7 @@ app.get('/testSessione', function(req, res, next) {
             key: fixedKey,
             scopes: SCOPES
         });
-    }
+    }*/
     
     //10/01/2019
     //copiato codice da progetto api
