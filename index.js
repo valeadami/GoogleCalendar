@@ -60,7 +60,7 @@ app.use(function (req, res, next) {
     
    
     next();*/
-    req.session.pd='porco dio';
+    req.session.pd='test';
     req.session.matId='';
     req.session.stuId='';
   
